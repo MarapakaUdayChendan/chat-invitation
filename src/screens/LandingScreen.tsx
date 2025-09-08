@@ -1,5 +1,12 @@
 import { useNavigation } from "expo-router";
-import { Button, StatusBar, StyleSheet, Text, View } from "react-native";
+import {
+  Button,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import LoginScreen from "./LoginScreen";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStack } from "../navigation/RootStackNavigation";
@@ -19,37 +26,19 @@ const LandingScreen: React.FC = () => {
         </View>
 
         <View style={styles.buttonContainer}>
-          <Button
-            title="Login"
+          <TouchableOpacity
+            style={[styles.button, { backgroundColor: "#14d565ff" }]}
             onPress={() => navigation.navigate("LoginScreen")}
-            color="#14d565ff"
-          />
-          <Button
-            title="SignUp"
+          >
+            <Text style={styles.buttonText}>Login</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.button, { backgroundColor: "blue" }]}
             onPress={() => navigation.navigate("SignUpScreen")}
-            color="blue"
-          />
-          {/* <MyButton
-            fullWidth={true}
-            title="Admin Login"
-            onPress={() => navigation.navigate("AdminLogin")}
-            color="#14a86cff"
-            style={styles.button}
-          />
-          <MyButton
-            fullWidth={true}
-            title="User Login"
-            onPress={() => navigation.navigate("Login")}
-            color="#14d565ff"
-            style={styles.button}
-          />
-          <MyButton
-            fullWidth={true}
-            title="User Signup"
-            onPress={() => navigation.navigate("SignUp")}
-            color="#2e25c8ff"
-            style={styles.button}
-          /> */}
+          >
+            <Text style={styles.buttonText}>Sign Up</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -92,13 +81,17 @@ const styles = StyleSheet.create({
     width: "100%",
     gap: 15,
   },
+  buttonText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#fff",
+  },
   button: {
+    paddingVertical: 15,
     borderRadius: 10,
+    alignItems: "center",
     shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 3,
     elevation: 3,

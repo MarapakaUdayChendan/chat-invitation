@@ -171,7 +171,12 @@ const SignUpScreen: React.FC = () => {
           )}
 
           <View style={styles.buttonWrapper}>
-            <Button title="Sign Up" onPress={handleLogin} color="#0066cc" />
+            <TouchableOpacity
+              style={[styles.button, { backgroundColor: "#0066cc" }]}
+              onPress={handleLogin}
+            >
+              <Text style={styles.buttonText}>Sign Up</Text>
+            </TouchableOpacity>
           </View>
 
           <View style={styles.textRow}>
@@ -230,9 +235,12 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 10,
     backgroundColor: "#fff",
+    height: 48,
   },
   eyeButton: {
     paddingHorizontal: 12,
+    height: "100%",
+    justifyContent: "center",
   },
   errorText: {
     color: "red",
@@ -250,5 +258,22 @@ const styles = StyleSheet.create({
   linkText: {
     color: "green",
     fontWeight: "500",
+  },
+  buttonText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#fff",
+  },
+  button: {
+    height: 48,
+    justifyContent: "center",
+    paddingVertical: 12,
+    borderRadius: 10,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 3,
   },
 });

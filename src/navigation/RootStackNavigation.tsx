@@ -19,7 +19,7 @@ export type RootStack = {
   SignUpConfirmation: undefined;
   ForgotPasswordScreen: undefined;
   ForgotPasswordConfirmation: undefined;
-  ContactHome:undefined;
+  ContactHome: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStack>();
@@ -31,7 +31,7 @@ const RootStackNavigation: React.FC = () => {
         <SafeAreaView style={styles.safeArea} edges={["top", "left", "right"]}>
           <Stack.Navigator
             screenOptions={{ headerShown: false }}
-            initialRouteName="LoginScreen"
+            initialRouteName="LandingScreen"
           >
             <Stack.Screen name="LandingScreen" component={LandingScreen} />
             <Stack.Screen name="LoginScreen" component={LoginScreen} />
@@ -48,10 +48,7 @@ const RootStackNavigation: React.FC = () => {
               name="ForgotPasswordConfirmation"
               component={ForgotPasswordConfirmation}
             />
-            <Stack.Screen
-              name="ContactHome"
-              component={ContactHome}
-            />
+            <Stack.Screen name="ContactHome" component={ContactHome} />
           </Stack.Navigator>
         </SafeAreaView>
       </NavigationContainer>
