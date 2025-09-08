@@ -30,7 +30,7 @@ const LandingScreen: React.FC = () => {
             style={[styles.button, { backgroundColor: "#14d565ff" }]}
             onPress={() => navigation.navigate("LoginScreen")}
           >
-            <Text style={styles.buttonText}>Login</Text>
+            <Text style={styles.buttonText}>Sign In</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
