@@ -11,6 +11,12 @@ import SignUpConfirmation from "../screens/SignUpConfirmation";
 import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
 import ForgotPasswordConfirmation from "../screens/ForgotPasswordConfirmation";
 import ContactHome from "../screens/ContactHome";
+import InviteContacts from "../screens/InviteContacts"
+
+export type SelectedContact = {
+  id: string;
+  name: string;
+};
 
 export type RootStack = {
   LandingScreen: undefined;
@@ -19,7 +25,8 @@ export type RootStack = {
   SignUpConfirmation: undefined;
   ForgotPasswordScreen: undefined;
   ForgotPasswordConfirmation: undefined;
-  ContactHome: undefined;
+  ContactHome:undefined;
+  InviteContacts: { selectedContacts: SelectedContact[] };
 };
 
 const Stack = createNativeStackNavigator<RootStack>();
@@ -48,7 +55,14 @@ const RootStackNavigation: React.FC = () => {
               name="ForgotPasswordConfirmation"
               component={ForgotPasswordConfirmation}
             />
-            <Stack.Screen name="ContactHome" component={ContactHome} />
+            <Stack.Screen
+              name="ContactHome"
+              component={ContactHome}
+            />
+            <Stack.Screen
+              name="InviteContacts"
+              component={InviteContacts}
+            />
           </Stack.Navigator>
         </SafeAreaView>
       </NavigationContainer>
