@@ -67,7 +67,7 @@ const ForgotPasswordScreen: React.FC = () => {
     setEmailError("");
     setOtpError("");
     setEnteredOtp("");
-    Alert.alert("OTP Sent", Your OTP is ${otp});
+    Alert.alert("OTP Sent", `Your OTP is ${otp}`);
   };
 
   const handleVerifyOtp = () => {
@@ -77,7 +77,10 @@ const ForgotPasswordScreen: React.FC = () => {
     }
     if (enteredOtp === generatedOtp) {
       setOtpError("");
-      Alert.alert("✅ Success", "OTP Verified! You can now reset your password.");
+      Alert.alert(
+        "✅ Success",
+        "OTP Verified! You can now reset your password."
+      );
     } else {
       setOtpError("Invalid OTP. Please try again.");
     }
@@ -92,7 +95,7 @@ const ForgotPasswordScreen: React.FC = () => {
     if (msLeft > 0) {
       const hours = Math.floor(msLeft / (60 * 60 * 1000));
       const mins = Math.floor((msLeft % (60 * 60 * 1000)) / (60 * 1000));
-      blockMessage = You have reached the limit. Try again after ${hours}h ${mins}m.;
+      blockMessage = `You have reached the limit. Try again after ${hours}h ${mins}m.`;
     }
   }
 
@@ -130,7 +133,9 @@ const ForgotPasswordScreen: React.FC = () => {
               returnKeyType="done"
               editable={!blocked}
             />
-            {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
+            {emailError ? (
+              <Text style={styles.errorText}>{emailError}</Text>
+            ) : null}
           </View>
 
           {/* Send OTP */}
@@ -159,7 +164,9 @@ const ForgotPasswordScreen: React.FC = () => {
                   setOtpError("");
                 }}
               />
-              {otpError ? <Text style={styles.errorText}>{otpError}</Text> : null}
+              {otpError ? (
+                <Text style={styles.errorText}>{otpError}</Text>
+              ) : null}
             </View>
           )}
 
@@ -169,19 +176,22 @@ const ForgotPasswordScreen: React.FC = () => {
           )}
 
           {/* Resend OTP */}
-          {!blocked && generatedOtp && timeLeft === 0 && sendCount < MAX_OTP_SENDS && (
-            <TouchableOpacity
-              onPress={handleResendOtp}
-              style={styles.resendWrapper}
-              activeOpacity={0.7}
-            >
-              <Text style={styles.resendText}>
-                {sendCount < MAX_OTP_SENDS - 1
-                  ? "Resend OTP"
-                  : "Resend OTP (last attempt)"}
-              </Text>
-            </TouchableOpacity>
-          )}
+          {!blocked &&
+            generatedOtp &&
+            timeLeft === 0 &&
+            sendCount < MAX_OTP_SENDS && (
+              <TouchableOpacity
+                onPress={handleResendOtp}
+                style={styles.resendWrapper}
+                activeOpacity={0.7}
+              >
+                <Text style={styles.resendText}>
+                  {sendCount < MAX_OTP_SENDS - 1
+                    ? "Resend OTP"
+                    : "Resend OTP (last attempt)"}
+                </Text>
+              </TouchableOpacity>
+            )}
 
           <TouchableOpacity
             style={[styles.primaryButton, styles.successButton]}
@@ -200,7 +210,8 @@ const ForgotPasswordScreen: React.FC = () => {
                 { textAlign: "center", marginTop: 18, fontWeight: "700" },
               ]}
             >
-              {blockMessage || "You have reached the OTP limit. Try after 12 hours."}
+              {blockMessage ||
+                "You have reached the OTP limit. Try after 12 hours."}
             </Text>
           )}
         </View>
@@ -252,7 +263,12 @@ const styles = StyleSheet.create({
     }),
   },
   inputError: { borderColor: "#dc3545", backgroundColor: "#fff5f5" },
-  errorText: { fontSize: 12, color: "#dc3545", marginTop: 6, fontWeight: "500" },
+  errorText: {
+    fontSize: 12,
+    color: "#dc3545",
+    marginTop: 6,
+    fontWeight: "500",
+  },
   timerText: {
     textAlign: "center",
     color: "#555",
