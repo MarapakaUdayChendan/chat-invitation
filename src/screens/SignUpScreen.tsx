@@ -38,7 +38,6 @@ const SignUpScreen: React.FC = () => {
     confirmPassword?: string;
   }>({});
 
-  // 🔹 Separate states for password visibility
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -95,6 +94,7 @@ const SignUpScreen: React.FC = () => {
     setErrors(newErrors);
 
     if (valid) {
+      navigation.navigate("SignUpConfirmation");
       console.log("Signup Successful ✅", user);
     }
   };
@@ -128,7 +128,6 @@ const SignUpScreen: React.FC = () => {
             <Text style={styles.errorText}>{errors.mobileNumber}</Text>
           )}
 
-          {/* Password with show/hide */}
           <View style={styles.inputWrapper}>
             <TextInput
               style={[styles.input, { flex: 1, marginBottom: 0 }]}
@@ -150,7 +149,6 @@ const SignUpScreen: React.FC = () => {
             <Text style={styles.errorText}>{errors.password}</Text>
           )}
 
-          {/* Confirm Password with show/hide */}
           <View style={styles.inputWrapper}>
             <TextInput
               style={[styles.input, { flex: 1, marginBottom: 0 }]}
@@ -173,7 +171,12 @@ const SignUpScreen: React.FC = () => {
           )}
 
           <View style={styles.buttonWrapper}>
-            <Button title="Sign Up" onPress={handleLogin} color="#0066cc" />
+            <TouchableOpacity
+              style={[styles.button, { backgroundColor: "#0066cc" }]}
+              onPress={handleLogin}
+            >
+              <Text style={styles.buttonText}>Sign Up</Text>
+            </TouchableOpacity>
           </View>
 
           <View style={styles.textRow}>
@@ -181,7 +184,7 @@ const SignUpScreen: React.FC = () => {
             <TouchableOpacity
               onPress={() => navigation.navigate("LoginScreen")}
             >
-              <Text style={styles.linkText}>Login</Text>
+              <Text style={styles.linkText}>SignIn</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -232,9 +235,12 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 10,
     backgroundColor: "#fff",
+    height: 48,
   },
   eyeButton: {
     paddingHorizontal: 12,
+    height: "100%",
+    justifyContent: "center",
   },
   errorText: {
     color: "red",
@@ -252,5 +258,22 @@ const styles = StyleSheet.create({
   linkText: {
     color: "green",
     fontWeight: "500",
+  },
+  buttonText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#fff",
+  },
+  button: {
+    height: 48,
+    justifyContent: "center",
+    paddingVertical: 12,
+    borderRadius: 10,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 3,
   },
 });
