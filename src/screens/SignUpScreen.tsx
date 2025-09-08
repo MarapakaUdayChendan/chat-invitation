@@ -38,7 +38,6 @@ const SignUpScreen: React.FC = () => {
     confirmPassword?: string;
   }>({});
 
-  // 🔹 Separate states for password visibility
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -95,6 +94,7 @@ const SignUpScreen: React.FC = () => {
     setErrors(newErrors);
 
     if (valid) {
+      navigation.navigate("SignUpConfirmation");
       console.log("Signup Successful ✅", user);
     }
   };
@@ -128,7 +128,6 @@ const SignUpScreen: React.FC = () => {
             <Text style={styles.errorText}>{errors.mobileNumber}</Text>
           )}
 
-          {/* Password with show/hide */}
           <View style={styles.inputWrapper}>
             <TextInput
               style={[styles.input, { flex: 1, marginBottom: 0 }]}
@@ -150,7 +149,6 @@ const SignUpScreen: React.FC = () => {
             <Text style={styles.errorText}>{errors.password}</Text>
           )}
 
-          {/* Confirm Password with show/hide */}
           <View style={styles.inputWrapper}>
             <TextInput
               style={[styles.input, { flex: 1, marginBottom: 0 }]}
