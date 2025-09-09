@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Platform } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import EmailLogin from "../components/Email";
 import MobileLogin from "../components/Mobile";
+import { COLORS, FONT } from "../styles/theme";
 
-
-const LoginScreen: React.FC = ({navigation}: any) => {
+const LoginScreen: React.FC = () => {
   const [isEmailLogin, setIsEmailLogin] = useState(true);
 
   return (
@@ -16,56 +16,80 @@ const LoginScreen: React.FC = ({navigation}: any) => {
             <TouchableOpacity
               key={label}
               style={[styles.tab, active && styles.activeTab]}
+              activeOpacity={0.8}
               onPress={() => setIsEmailLogin(index === 0)}
-              activeOpacity={0.7}
             >
-              <Text style={[styles.tabText, active && styles.activeTabText]}>
+              <Text style={active ? styles.activeTabText : styles.tabText}>
                 {label}
               </Text>
             </TouchableOpacity>
           );
         })}
       </View>
-      <View style={styles.contentContainer}>
+
+      <View style={styles.contentCard}>
         {isEmailLogin ? <EmailLogin /> : <MobileLogin />}
       </View>
     </View>
   );
 };
 
+export default LoginScreen;
+
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#fff" },
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.background,
+    paddingHorizontal: 16,
+    paddingTop: 60,
+  },
+
   tabContainer: {
     flexDirection: "row",
-    backgroundColor: "#f5f5f5",
-    margin: 20,
-    marginBottom: 0,
+    backgroundColor: COLORS.surface,
     borderRadius: 12,
     padding: 4,
-    marginTop: 60,
+    marginBottom: 20,
+    shadowColor: COLORS.background,
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   tab: {
     flex: 1,
-    paddingVertical: 12,
+    paddingVertical: 14,
+    marginHorizontal: 2,
     borderRadius: 8,
     alignItems: "center",
     justifyContent: "center",
+    borderWidth: 1.5,
+    borderColor: COLORS.primary,
   },
   activeTab: {
-    backgroundColor: "#fff",
-    ...Platform.select({
-      ios: {
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 2,
-      },
-      android: { elevation: 2 },
-    }),
+    backgroundColor: COLORS.primary,
+    borderColor: COLORS.primary,
   },
-  tabText: { fontSize: 16, fontWeight: "500", color: "#666" },
-  activeTabText: { color: "#000", fontWeight: "600" },
-  contentContainer: { flex: 1 },
-});
+  tabText: {
+    fontSize: FONT.size.subheading,
+    fontWeight: FONT.weight.bold,
+    color: COLORS.primary,
+    fontFamily: FONT.family,
+  },
+  activeTabText: {
+    fontSize: FONT.size.subheading,
+    fontWeight: FONT.weight.bold,
+    color: COLORS.onPrimary,
+    fontFamily: FONT.family,
+  },
 
-export default LoginScreen;
+  contentCard: {
+    flex: 1,
+    backgroundColor: COLORS.surface,
+    borderRadius: 12,
+    padding: 20,
+    shadowColor: COLORS.background,
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 4,
+  },
+});

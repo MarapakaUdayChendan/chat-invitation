@@ -2,7 +2,7 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import { StyleSheet } from "react-native";
+import { StatusBar, StyleSheet } from "react-native";
 
 import LandingScreen from "../screens/LandingScreen";
 import LoginScreen from "../screens/LoginScreen";
@@ -11,7 +11,7 @@ import SignUpConfirmation from "../screens/SignUpConfirmation";
 import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
 import ForgotPasswordConfirmation from "../screens/ForgotPasswordConfirmation";
 import ContactHome from "../screens/ContactHome";
-import InviteContacts from "../screens/InviteContacts"
+import InviteContacts from "../screens/InviteContacts";
 
 export type SelectedContact = {
   id: string;
@@ -25,7 +25,7 @@ export type RootStack = {
   SignUpConfirmation: undefined;
   ForgotPasswordScreen: undefined;
   ForgotPasswordConfirmation: undefined;
-  ContactHome:undefined;
+  ContactHome: undefined;
   InviteContacts: { selectedContacts: SelectedContact[] };
 };
 
@@ -34,6 +34,7 @@ const Stack = createNativeStackNavigator<RootStack>();
 const RootStackNavigation: React.FC = () => {
   return (
     <SafeAreaProvider>
+      <StatusBar barStyle="light-content" backgroundColor="#000" />
       <NavigationContainer>
         <SafeAreaView style={styles.safeArea} edges={["top", "left", "right"]}>
           <Stack.Navigator
@@ -55,14 +56,8 @@ const RootStackNavigation: React.FC = () => {
               name="ForgotPasswordConfirmation"
               component={ForgotPasswordConfirmation}
             />
-            <Stack.Screen
-              name="ContactHome"
-              component={ContactHome}
-            />
-            <Stack.Screen
-              name="InviteContacts"
-              component={InviteContacts}
-            />
+            <Stack.Screen name="ContactHome" component={ContactHome} />
+            <Stack.Screen name="InviteContacts" component={InviteContacts} />
           </Stack.Navigator>
         </SafeAreaView>
       </NavigationContainer>

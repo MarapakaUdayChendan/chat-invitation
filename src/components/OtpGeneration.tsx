@@ -1,3 +1,4 @@
+import { COLORS } from "../styles/theme";
 export const OtpGeneration = ():string => {
     return Math.floor(1000 + Math.random() * 9000).toString();
 }

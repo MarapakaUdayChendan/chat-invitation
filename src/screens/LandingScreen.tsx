@@ -1,40 +1,26 @@
+import React from "react";
 import { useNavigation } from "expo-router";
-import {
-  Button,
-  StatusBar,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import LoginScreen from "./LoginScreen";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStack } from "../navigation/RootStackNavigation";
-
-type NavigationProp = NativeStackNavigationProp<RootStack, "LandingScreen">;
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { COLORS, FONT } from "../styles/theme";
 
 const LandingScreen: React.FC = () => {
-  const navigation = useNavigation<NavigationProp>();
+  const navigation = useNavigation<any>();
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
-
       <View style={styles.centerContent}>
         <View style={styles.header}>
           <Text style={styles.title}>Welcome</Text>
           <Text style={styles.subtitle}>Choose your authentication method</Text>
         </View>
-
         <View style={styles.buttonContainer}>
           <TouchableOpacity
-            style={[styles.button, { backgroundColor: "#14d565ff" }]}
+            style={styles.button}
             onPress={() => navigation.navigate("LoginScreen")}
           >
             <Text style={styles.buttonText}>Sign In</Text>
           </TouchableOpacity>
-
           <TouchableOpacity
-            style={[styles.button, { backgroundColor: "blue" }]}
+            style={[styles.button, { backgroundColor: COLORS.accent }]}
             onPress={() => navigation.navigate("SignUpScreen")}
           >
             <Text style={styles.buttonText}>Sign Up</Text>
@@ -50,7 +36,7 @@ export default LandingScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#ffffff",
+    backgroundColor: COLORS.background,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -65,34 +51,40 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   title: {
-    fontSize: 30,
-    fontWeight: "700",
-    color: "#2d3436",
+    fontSize: FONT.size.heading,
+    fontWeight: FONT.weight.bold,
+    color: COLORS.primary,
     marginBottom: 10,
     textAlign: "center",
+    fontFamily: FONT.family,
   },
   subtitle: {
-    fontSize: 16,
-    color: "#636e72",
+    fontSize: FONT.size.subheading,
+    color: COLORS.accent,
     textAlign: "center",
     lineHeight: 22,
+    fontFamily: FONT.family,
   },
   buttonContainer: {
     width: "100%",
     gap: 15,
+    marginTop: 20,
   },
   buttonText: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#fff",
+    fontSize: FONT.size.button,
+    fontWeight: FONT.weight.bold,
+    color: COLORS.onPrimary,
+    fontFamily: FONT.family,
   },
   button: {
+    backgroundColor: COLORS.primary,
     paddingVertical: 15,
     borderRadius: 10,
     alignItems: "center",
-    shadowColor: "#000",
+    marginVertical: 8,
+    shadowColor: COLORS.background,
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.08,
     shadowRadius: 3,
     elevation: 3,
   },

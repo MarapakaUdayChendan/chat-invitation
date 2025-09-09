@@ -6,11 +6,12 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
 } from "react-native";
 import { OtpGeneration } from "./OtpGeneration";
+import { COLORS, FONT, INPUT } from "../styles/theme";
+import { useNavigation } from "expo-router";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStack } from "../navigation/RootStackNavigation";
 
 const Mobile: React.FC = () => {
   const [mobile, setMobile] = useState("");
@@ -18,6 +19,8 @@ const Mobile: React.FC = () => {
   const [enteredOtp, setEnteredOtp] = useState("");
   const [mobileError, setMobileError] = useState("");
   const [otpError, setOtpError] = useState("");
+  const [otpVisible, setOtpVisible] = useState(false);
+  const navigation = useNavigation<NativeStackNavigationProp<RootStack>>();
 
   const handleSendOtp = () => {
     if (mobile.length !== 10) {
@@ -28,7 +31,7 @@ const Mobile: React.FC = () => {
     setGeneratedOtp(otp);
     setMobileError("");
     setOtpError("");
-    console.log("Generated OTP:", otp);
+    setOtpVisible(true);
     Alert.alert("OTP Sent", `Your OTP is ${otp}`);
   };
 
@@ -39,129 +42,129 @@ const Mobile: React.FC = () => {
     }
     if (enteredOtp === generatedOtp) {
       setOtpError("");
-      Alert.alert("Success", "Logged in successfully!");
+      navigation.navigate("ContactHome");
     } else {
       setOtpError("Invalid OTP. Please try again.");
     }
   };
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
-    >
-      <ScrollView
-        contentContainerStyle={styles.container}
-        keyboardShouldPersistTaps="handled"
-      >
-        <View style={styles.card}>
-          <Text style={styles.heading}>Login with Mobile</Text>
+    <View style={styles.container}>
+      <View style={styles.card}>
+        <Text style={styles.heading}>Login with Mobile</Text>
 
-          <TextInput
-            style={[styles.input, mobileError ? styles.inputError : null]}
-            placeholder="Enter Mobile Number"
-            keyboardType="numeric"
-            maxLength={10}
-            value={mobile}
-            onChangeText={(text) => {
-              setMobile(text);
-              setMobileError("");
-            }}
-          />
-          {mobileError ? <Text style={styles.error}>{mobileError}</Text> : null}
+        <TextInput
+          style={styles.input}
+          placeholder="Mobile Number"
+          placeholderTextColor={COLORS.placeholder}
+          keyboardType="phone-pad"
+          value={mobile}
+          onChangeText={(text) => {
+            setMobile(text);
+            setMobileError("");
+          }}
+          maxLength={10}
+        />
+        {mobileError ? <Text style={styles.error}>{mobileError}</Text> : null}
 
-          <TouchableOpacity style={styles.sendButton} onPress={handleSendOtp}>
-            <Text style={styles.buttonText}>Send OTP</Text>
-          </TouchableOpacity>
+        <TouchableOpacity style={styles.primaryButton} onPress={handleSendOtp}>
+          <Text style={styles.buttonText}>Send OTP</Text>
+        </TouchableOpacity>
 
-          <TextInput
-            style={[styles.input, otpError ? styles.inputError : null]}
-            placeholder="Enter OTP"
-            keyboardType="numeric"
-            maxLength={4}
-            value={enteredOtp}
-            onChangeText={(text) => {
-              setEnteredOtp(text);
-              setOtpError("");
-            }}
-          />
-          {otpError ? <Text style={styles.error}>{otpError}</Text> : null}
+        {otpVisible && (
+          <>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter OTP"
+              placeholderTextColor={COLORS.placeholder}
+              keyboardType="number-pad"
+              value={enteredOtp}
+              onChangeText={(text) => {
+                setEnteredOtp(text);
+                setOtpError("");
+              }}
+            />
+            {otpError ? <Text style={styles.error}>{otpError}</Text> : null}
 
-          <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-            <Text style={styles.buttonText}>Submit</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+            <TouchableOpacity
+              style={styles.accentButton}
+              onPress={handleSubmit}
+            >
+              <Text style={styles.buttonText}>Submit</Text>
+            </TouchableOpacity>
+          </>
+        )}
+      </View>
+    </View>
   );
 };
 
+export default Mobile;
+
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
+    flex: 1,
+    backgroundColor: COLORS.surface,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#f0f2f5",
-    padding: 15,
+    padding: 16,
     paddingBottom: 50,
   },
   card: {
-    width: "90%",
-    backgroundColor: "#fff",
+    width: "100%",
+    maxWidth: 370,
+    backgroundColor: COLORS.surface,
     borderRadius: 12,
-    padding: 25,
-    shadowColor: "#000",
+    padding: 24,
+    shadowColor: COLORS.background,
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 3 },
     shadowRadius: 5,
     elevation: 5,
   },
   heading: {
-    fontSize: 24,
-    fontWeight: "700",
+    fontSize: FONT.size.heading,
+    fontWeight: FONT.weight.bold,
     textAlign: "center",
-    marginBottom: 25,
-    color: "#222",
+    marginBottom: 24,
+    color: COLORS.primary,
+    fontFamily: FONT.family,
   },
   input: {
+    ...INPUT,
     width: "100%",
-    borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 12,
-    borderRadius: 10,
-    marginBottom: 5,
-    fontSize: 16,
-    backgroundColor: "#fafafa",
     textAlign: "center",
-  },
-  inputError: {
-    borderColor: "red",
   },
   error: {
-    color: "red",
-    fontSize: 14,
-    marginBottom: 10,
+    color: COLORS.error,
+    fontSize: FONT.size.label,
+    marginBottom: 8,
     textAlign: "center",
+    fontFamily: FONT.family,
+    fontWeight: FONT.weight.medium,
   },
-  sendButton: {
-    backgroundColor: "#4e8cff",
+  primaryButton: {
+    backgroundColor: COLORS.primary,
     paddingVertical: 14,
     borderRadius: 10,
-    marginTop: 10,
-    marginBottom: 15,
+    marginVertical: 10,
+    width: "100%",
+    alignItems: "center",
   },
-  submitButton: {
-    backgroundColor: "#28a745",
+  accentButton: {
+    backgroundColor: COLORS.accent,
     paddingVertical: 14,
     borderRadius: 10,
-    marginTop: 10,
+    marginTop: 12,
+    width: "100%",
+    alignItems: "center",
   },
   buttonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "600",
+    color: COLORS.onPrimary,
+    fontSize: FONT.size.button,
+    fontWeight: FONT.weight.bold,
     textAlign: "center",
+    fontFamily: FONT.family,
+    letterSpacing: 0.5,
   },
 });
-
-export default Mobile;

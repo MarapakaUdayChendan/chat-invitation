@@ -1,6 +1,14 @@
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Alert } from 'react-native'
-import React from 'react'
-import { useRoute, useNavigation } from '@react-navigation/native'
+import React from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
+import { useRoute, useNavigation } from "@react-navigation/native";
+import { COLORS, FONT } from "../styles/theme";
 
 interface SelectedContact {
   id: string;
@@ -9,289 +17,250 @@ interface SelectedContact {
 }
 
 export default function InviteContacts() {
-  const route = useRoute();
-  const navigation = useNavigation();
-  
-  // Get selectedContacts from route params
-  const { selectedContacts } = route.params as { selectedContacts: SelectedContact[] };
-
-  // Handle sending invite to individual contact
-  const handleSendIndividualInvite = (contact: SelectedContact) => {
-    Alert.alert(
-      "Send Invite",
-      `Send invitation to ${contact.name}?`,
-      [
-        { text: "Cancel", style: "cancel" },
-        { 
-          text: "Send", 
-          onPress: () => {
-            // Add your invite logic here (SMS, WhatsApp, etc.)
-            console.log(`Sending invite to ${contact.name} at ${contact.phoneNumber}`);
-            Alert.alert("Success", `Invitation sent to ${contact.name}!`);
-          }
-        }
-      ]
-    );
+  const route = useRoute<any>();
+  const navigation = useNavigation<any>();
+  const { selectedContacts } = route.params as {
+    selectedContacts: SelectedContact[];
   };
 
-  // Handle sending invite to all contacts
+  const handleSendIndividualInvite = (contact: SelectedContact) => {
+    Alert.alert("Send Invite", `Send invitation to ${contact.name}?`, [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Send",
+        onPress: () => {
+          console.log(
+            `Sending invite to ${contact.name} at ${contact.phoneNumber}`
+          );
+          Alert.alert("Success", `Invitation sent to ${contact.name}!`);
+        },
+      },
+    ]);
+  };
+
   const handleSendBulkInvite = () => {
     Alert.alert(
       "Send Invites",
       `Send invitation to all ${selectedContacts.length} contacts?`,
       [
         { text: "Cancel", style: "cancel" },
-        { 
-          text: "Send All", 
+        {
+          text: "Send All",
           onPress: () => {
-            // Add your bulk invite logic here
-            selectedContacts.forEach(contact => {
-              console.log(`Sending invite to ${contact.name} at ${contact.phoneNumber}`);
+            selectedContacts.forEach((contact) => {
+              console.log(
+                `Sending invite to ${contact.name} at ${contact.phoneNumber}`
+              );
             });
             Alert.alert(
-              "Success", 
+              "Success",
               `Invitations sent to ${selectedContacts.length} contacts!`,
-              [
-                {
-                  text: "OK",
-                  onPress: () => navigation.goBack()
-                }
-              ]
+              [{ text: "OK", onPress: () => navigation.goBack() }]
             );
-          }
-        }
+          },
+        },
       ]
     );
   };
 
-  // Render individual contact item
-  const renderContactItem = ({ item }: { item: SelectedContact }) => {
-    const avatarLetter = (item.name[0] || "?").toUpperCase();
-
-    return (
-      <View style={styles.contactItem}>
-        <View style={styles.contactInfo}>
-          <View style={styles.avatarPlaceholder}>
-            <Text style={styles.avatarText}>{avatarLetter}</Text>
-          </View>
-          
-          <View style={styles.contactDetails}>
-            <Text style={styles.contactName}>{item.name}</Text>
-            <Text style={styles.contactPhone}>{item.phoneNumber}</Text>
-          </View>
+  const renderContactItem = ({ item }: { item: SelectedContact }) => (
+    <View style={styles.contactItem}>
+      <View style={styles.contactInfo}>
+        <View style={styles.avatarPlaceholder}>
+          <Text style={styles.avatarText}>
+            {(item.name[0] || "?").toUpperCase()}
+          </Text>
         </View>
-
-        <TouchableOpacity
-          style={styles.inviteButton}
-          onPress={() => handleSendIndividualInvite(item)}
-        >
-          <Text style={styles.inviteButtonText}>Invite</Text>
-        </TouchableOpacity>
+        <View style={styles.contactDetails}>
+          <Text style={styles.contactName}>{item.name}</Text>
+          <Text style={styles.contactPhone}>{item.phoneNumber}</Text>
+        </View>
       </View>
-    );
-  };
+      <TouchableOpacity
+        style={styles.inviteButton}
+        activeOpacity={0.8}
+        onPress={() => handleSendIndividualInvite(item)}
+      >
+        <Text style={styles.inviteButtonText}>Invite</Text>
+      </TouchableOpacity>
+    </View>
+  );
 
   return (
     <View style={styles.container}>
-      {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.backButton}
           onPress={() => navigation.goBack()}
         >
           <Text style={styles.backButtonText}>← Back</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Send Invites</Text>
-        <View style={styles.placeholder} />
+        <View style={{ width: 40 }} />
       </View>
 
-      {/* Selected contacts count */}
       <View style={styles.summaryCard}>
         <Text style={styles.summaryTitle}>Selected Contacts</Text>
-        <Text style={styles.summaryCount}>{selectedContacts?.length || 0} contact(s) selected</Text>
+        <Text style={styles.summaryCount}>
+          {selectedContacts?.length || 0} contact(s) selected
+        </Text>
       </View>
 
-      {/* Contacts list */}
       <FlatList
-        data={selectedContacts || []}
-        renderItem={renderContactItem}
+        data={selectedContacts}
         keyExtractor={(item) => item.id}
+        renderItem={renderContactItem}
         style={styles.contactsList}
-        showsVerticalScrollIndicator={false}
         ListEmptyComponent={
-          <View style={styles.emptyState}>
+          <View style={{ alignItems: "center", paddingVertical: 40 }}>
             <Text style={styles.emptyText}>No contacts selected</Text>
           </View>
         }
       />
 
-      {/* Send all button */}
       {selectedContacts && selectedContacts.length > 0 && (
-        <View style={styles.bottomContainer}>
-          <TouchableOpacity
-            style={styles.sendAllButton}
-            onPress={handleSendBulkInvite}
-          >
-            <Text style={styles.sendAllButtonText}>
-              Send Invite to All ({selectedContacts.length})
-            </Text>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity
+          style={styles.sendAllButton}
+          activeOpacity={0.85}
+          onPress={handleSendBulkInvite}
+        >
+          <Text style={styles.sendAllButtonText}>
+            Send Invite to All ({selectedContacts.length})
+          </Text>
+        </TouchableOpacity>
       )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
+  container: { flex: 1, backgroundColor: COLORS.background },
+
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingVertical: 14,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: COLORS.primary,
+    backgroundColor: COLORS.background,
     marginTop: 40,
   },
-  backButton: {
-    padding: 8,
-  },
+  backButton: { padding: 8 },
   backButtonText: {
     fontSize: 16,
-    color: '#007AFF',
-    fontWeight: '600',
+    color: COLORS.primary,
+    fontWeight: FONT.weight.bold,
+    fontFamily: FONT.family,
   },
   headerTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#000',
+    fontSize: FONT.size.subheading,
+    fontWeight: FONT.weight.bold,
+    color: COLORS.primary,
+    fontFamily: FONT.family,
   },
-  placeholder: {
-    width: 50,
-  },
+
   summaryCard: {
-    backgroundColor: '#f8f9fa',
+    backgroundColor: COLORS.surface,
     margin: 16,
     padding: 16,
     borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#e9ecef',
+    borderWidth: 2,
+    borderColor: COLORS.borderAccent,
   },
   summaryTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#495057',
+    fontSize: FONT.size.label,
+    fontWeight: FONT.weight.bold,
+    color: COLORS.primary,
     marginBottom: 4,
+    fontFamily: FONT.family,
   },
   summaryCount: {
-    fontSize: 14,
-    color: '#6c757d',
+    fontSize: FONT.size.label,
+    color: COLORS.onSurface,
+    fontWeight: FONT.weight.medium,
+    fontFamily: FONT.family,
   },
-  contactsList: {
-    flex: 1,
-    paddingHorizontal: 16,
-  },
+
+  contactsList: { flex: 1, paddingHorizontal: 10 },
+
   contactItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    marginBottom: 8,
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#e9ecef',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingVertical: 14,
+    paddingHorizontal: 18,
+    marginBottom: 10,
+    backgroundColor: COLORS.surface,
+    borderRadius: 10,
+    borderWidth: 1.5,
+    borderColor: COLORS.primary,
   },
-  contactInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
-  },
+  contactInfo: { flexDirection: "row", alignItems: "center", flex: 1 },
+
   avatarPlaceholder: {
     width: 45,
     height: 45,
     borderRadius: 22.5,
-    backgroundColor: '#6c757d',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: COLORS.accent,
+    justifyContent: "center",
+    alignItems: "center",
     marginRight: 12,
   },
   avatarText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#fff',
+    fontSize: 18,
+    fontWeight: FONT.weight.bold,
+    color: COLORS.onPrimary,
+    fontFamily: FONT.family,
   },
-  contactDetails: {
-    flex: 1,
-  },
+
+  contactDetails: { flex: 1 },
   contactName: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#212529',
+    fontSize: FONT.size.input,
+    fontWeight: FONT.weight.bold,
+    color: COLORS.onSurface,
     marginBottom: 2,
+    fontFamily: FONT.family,
   },
   contactPhone: {
     fontSize: 14,
-    color: '#6c757d',
+    color: COLORS.primary,
+    fontFamily: FONT.family,
   },
+
   inviteButton: {
-    backgroundColor: '#007AFF',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
+    backgroundColor: COLORS.primary,
+    paddingHorizontal: 18,
+    paddingVertical: 10,
     borderRadius: 8,
+    alignItems: "center",
   },
   inviteButtonText: {
-    color: '#fff',
-    fontSize: 14,
-    fontWeight: '600',
+    color: COLORS.onPrimary,
+    fontWeight: FONT.weight.bold,
+    fontSize: FONT.size.button,
+    fontFamily: FONT.family,
   },
-  emptyState: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 40,
-  },
+
   emptyText: {
-    fontSize: 16,
-    color: '#6c757d',
+    fontSize: FONT.size.input,
+    color: COLORS.hint,
+    fontFamily: FONT.family,
   },
-  bottomContainer: {
-    padding: 16,
-    borderTopWidth: 1,
-    borderTopColor: '#eee',
-    backgroundColor: '#fff',
-  },
+
   sendAllButton: {
-    backgroundColor: '#28a745',
+    backgroundColor: COLORS.accent,
     paddingVertical: 16,
     paddingHorizontal: 24,
     borderRadius: 12,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    alignItems: "center",
+    marginVertical: 10,
   },
   sendAllButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '700',
+    color: COLORS.onPrimary,
+    fontSize: FONT.size.button,
+    fontWeight: FONT.weight.bold,
+    fontFamily: FONT.family,
   },
 });

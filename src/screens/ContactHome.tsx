@@ -2,18 +2,20 @@ import React, { useState, useEffect, useCallback, useMemo } from "react";
 import {
   View,
   Text,
-  FlatList,
   StyleSheet,
+  ActivityIndicator,
   Alert,
   TouchableOpacity,
-  TextInput,
-  ActivityIndicator,
-  Image,
 } from "react-native";
 import * as ExpoContacts from "expo-contacts";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import type { RootStack } from "../navigation/RootStackNavigation";
+import { COLORS, FONT } from "../styles/theme";
+
+import ContactList from "../components/contacts/ContactList";
+import ContactSearch from "../components/contacts/ContactSearch";
+import ContactPermission from "../components/contacts/ContactPermission";
 
 interface Contact {
   id: string;
@@ -24,13 +26,6 @@ interface Contact {
   image?: { uri: string };
 }
 
-interface ContactsState {
-  contacts: Contact[];
-  loading: boolean;
-  permissionStatus: "granted" | "denied" | "checking" | "requesting";
-  error: string | null;
-}
-
 interface SelectedContact {
   id: string;
   name: string;
@@ -39,62 +34,76 @@ interface SelectedContact {
 
 const ContactHome: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<RootStack>>();
-  const [contactsState, setContactsState] = useState<ContactsState>({
-    contacts: [],
-    loading: false,
-    permissionStatus: "checking",
-    error: null,
-  });
+  const [contacts, setContacts] = useState<Contact[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [permissionStatus, setPermissionStatus] = useState<
+    "granted" | "denied" | "checking" | "requesting"
+  >("checking");
+  const [error, setError] = useState<string | null>(null);
+
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedContacts, setSelectedContacts] = useState<Set<string>>(new Set());
+  const [selectedContacts, setSelectedContacts] = useState<Set<string>>(
+    new Set()
+  );
   const [isSelectionMode, setIsSelectionMode] = useState(false);
 
   const loadContacts = useCallback(async () => {
-    setContactsState(prev => ({ ...prev, permissionStatus: "requesting" }));
+    setPermissionStatus("requesting");
     try {
       const { status } = await ExpoContacts.requestPermissionsAsync();
       if (status !== "granted") {
-        return setContactsState({ contacts: [], loading: false, permissionStatus: "denied", error: "Contacts permission is required." });
+        setPermissionStatus("denied");
+        setError("Contacts permission is required.");
+        return;
       }
-      setContactsState(prev => ({ ...prev, loading: true }));
-
-      const { data } = await ExpoContacts.getContactsAsync({ fields: [ExpoContacts.Fields.PhoneNumbers, ExpoContacts.Fields.Emails] });
-      const contacts = data
-        .filter(c => c.id)
-        .sort((a, b) => (a.name || "").localeCompare(b.name || ""))
-        .map(c => ({
-          id: c.id as string,
-          name: c.name ?? "",
-          phoneNumbers: c.phoneNumbers,
-          emails: c.emails,
-          imageAvailable: c.imageAvailable,
-          image: c.image,
-        }));
-
-      setContactsState({ contacts, loading: false, permissionStatus: "granted", error: null });
+      setLoading(true);
+      const { data } = await ExpoContacts.getContactsAsync({
+        fields: [ExpoContacts.Fields.PhoneNumbers, ExpoContacts.Fields.Emails],
+      });
+      const sorted = data
+        .filter((c) => c.id)
+        .sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+      setContacts(sorted as Contact[]);
+      setPermissionStatus("granted");
+      setLoading(false);
     } catch {
-      setContactsState(prev => ({ ...prev, loading: false, permissionStatus: "denied", error: "Failed to load contacts" }));
+      setPermissionStatus("denied");
+      setError("Failed to load contacts");
+      setLoading(false);
     }
   }, []);
 
-  useEffect(() => { loadContacts(); }, [loadContacts]);
+  useEffect(() => {
+    loadContacts();
+  }, [loadContacts]);
 
   const filteredContacts = useMemo(() => {
-    const q = searchQuery.toLowerCase();
-    return q
-      ? contactsState.contacts.filter(c =>
-          (c.name?.toLowerCase().includes(q) || c.phoneNumbers?.some(p => p.number.replace(/\D/g, "").includes(q.replace(/\D/g, ""))))
-        )
-      : contactsState.contacts;
-  }, [searchQuery, contactsState.contacts]);
+    const raw = searchQuery.trim();
+    if (!raw) return contacts;
+
+    const q = raw.toLowerCase();
+    const qDigits = raw.replace(/\D/g, "");
+    const hasDigits = qDigits.length > 0;
+
+    return contacts.filter((c) => {
+      const nameMatch = (c.name || "").toLowerCase().includes(q);
+      let phoneMatch = false;
+      if (hasDigits && c.phoneNumbers?.length) {
+        phoneMatch = c.phoneNumbers.some((p) =>
+          (p.number || "").replace(/\D/g, "").includes(qDigits)
+        );
+      }
+      return nameMatch || phoneMatch;
+    });
+  }, [searchQuery, contacts]);
 
   const toggleSelectionMode = useCallback(() => {
-    setIsSelectionMode(prev => !prev);
+    setIsSelectionMode((prev) => !prev);
     if (isSelectionMode) setSelectedContacts(new Set());
   }, [isSelectionMode]);
 
   const toggleContactSelection = useCallback((id: string) => {
-    setSelectedContacts(prev => {
+    setSelectedContacts((prev) => {
       const next = new Set(prev);
       next.has(id) ? next.delete(id) : next.add(id);
       return next;
@@ -106,7 +115,9 @@ const ContactHome: React.FC = () => {
       if (isSelectionMode) return toggleContactSelection(contact.id);
       Alert.alert(
         contact.name || "Unknown",
-        `Phone: ${contact.phoneNumbers?.[0]?.number || "No phone"}\nEmail: ${contact.emails?.[0]?.email || "No email"}`,
+        `Phone: ${contact.phoneNumbers?.[0]?.number || "No phone"}\nEmail: ${
+          contact.emails?.[0]?.email || "No email"
+        }`,
         [{ text: "Close", style: "cancel" }]
       );
     },
@@ -115,98 +126,74 @@ const ContactHome: React.FC = () => {
 
   const handleInvite = useCallback(() => {
     const selected: SelectedContact[] = Array.from(selectedContacts)
-      .map(id => {
-        const c = contactsState.contacts.find(c => c.id === id);
-        return c?.phoneNumbers?.[0]?.number ? { id: c.id, name: c.name || "Unknown", phoneNumber: c.phoneNumbers[0].number } : null;
+      .map((id) => {
+        const c = contacts.find((c) => c.id === id);
+        return c?.phoneNumbers?.[0]?.number
+          ? {
+              id: c.id,
+              name: c.name || "Unknown",
+              phoneNumber: c.phoneNumbers[0].number,
+            }
+          : null;
       })
       .filter(Boolean) as SelectedContact[];
 
-    if (!selected.length) return Alert.alert("Error", "Please select contacts with phone numbers");
+    if (!selected.length)
+      return Alert.alert("Error", "Please select contacts with phone numbers");
+
     navigation.navigate("InviteContacts", { selectedContacts: selected });
     setSelectedContacts(new Set());
     setIsSelectionMode(false);
-  }, [selectedContacts, contactsState.contacts, navigation]);
+  }, [selectedContacts, contacts, navigation]);
 
-  const renderContactItem = ({ item }: { item: Contact }) => {
-    const isSelected = selectedContacts.has(item.id);
-    return (
-      <TouchableOpacity style={[styles.contactItem, isSelected && styles.selectedContactItem]} onPress={() => handleContactPress(item)}>
-        {isSelectionMode && (
-          <View style={styles.selectionIndicator}>
-            <View style={[styles.checkbox, isSelected && styles.checkboxSelected]}>
-              {isSelected && <Text style={styles.checkmark}>✓</Text>}
-            </View>
-          </View>
-        )}
-        {item.imageAvailable && item.image?.uri ? (
-          <Image source={{ uri: item.image.uri }} style={styles.avatar} />
-        ) : (
-          <View style={styles.avatarPlaceholder}>
-            <Text style={styles.avatarText}>{(item.name[0] || "?").toUpperCase()}</Text>
-          </View>
-        )}
-        <View style={styles.contactInfo}>
-          <Text style={styles.contactName}>{item.name || "Unknown"}</Text>
-          {item.phoneNumbers?.[0]?.number && <Text style={styles.contactPhone}>{item.phoneNumbers[0].number}</Text>}
-          {item.emails?.[0]?.email && <Text style={styles.contactEmail}>{item.emails[0].email}</Text>}
-        </View>
-      </TouchableOpacity>
-    );
-  };
-
-  if (contactsState.loading || contactsState.permissionStatus === "requesting") {
+  if (loading || permissionStatus === "requesting") {
     return (
       <View style={styles.center}>
-        <ActivityIndicator size="large" color="#000" />
-        <Text>Loading contacts...</Text>
+        <ActivityIndicator size="large" color={COLORS.primary} />
+        <Text style={styles.loadingText}>Loading contacts...</Text>
       </View>
     );
   }
 
-  if (contactsState.permissionStatus === "denied") {
-    return (
-      <View style={styles.center}>
-        <Text style={{ fontSize: 16, marginBottom: 12 }}>{contactsState.error}</Text>
-        <TouchableOpacity style={styles.retryButton} onPress={loadContacts}>
-          <Text style={styles.retryText}>Grant Permission</Text>
-        </TouchableOpacity>
-      </View>
-    );
+  if (permissionStatus === "denied") {
+    return <ContactPermission error={error} onRetry={loadContacts} />;
   }
 
   return (
     <View style={styles.container}>
-      <View style={styles.headerContainer}>
+      <View style={styles.headerRow}>
         <Text style={styles.header}>My Contacts</Text>
-        <TouchableOpacity style={styles.selectButton} onPress={toggleSelectionMode}>
-          <Text style={styles.selectButtonText}>{isSelectionMode ? "Cancel" : "Select"}</Text>
+        <TouchableOpacity
+          style={styles.accentButton}
+          onPress={toggleSelectionMode}
+        >
+          <Text style={styles.buttonText}>
+            {isSelectionMode ? "Cancel" : "Select"}
+          </Text>
         </TouchableOpacity>
       </View>
 
-      <TextInput
-        style={styles.searchInput}
-        placeholder="Search by name or phone number..."
-        value={searchQuery}
-        onChangeText={setSearchQuery}
-      />
+      <ContactSearch query={searchQuery} onChange={setSearchQuery} />
 
       {isSelectionMode && selectedContacts.size > 0 && (
-        <View style={styles.selectionSummary}>
-          <Text style={styles.selectionText}>{selectedContacts.size} contact(s) selected</Text>
-        </View>
+        <Text style={styles.selectionText}>
+          {selectedContacts.size} contact(s) selected
+        </Text>
       )}
 
-      <FlatList
-        data={filteredContacts}
-        renderItem={renderContactItem}
-        keyExtractor={item => item.id}
-        ListEmptyComponent={<Text style={styles.emptyText}>No contacts found</Text>}
+      <ContactList
+        contacts={filteredContacts}
+        selectedContacts={selectedContacts}
+        isSelectionMode={isSelectionMode}
+        onContactPress={handleContactPress}
       />
 
       {isSelectionMode && selectedContacts.size > 0 && (
-        <View style={styles.inviteButtonContainer}>
-          <TouchableOpacity style={styles.inviteButton} onPress={handleInvite}>
-            <Text style={styles.inviteButtonText}>Invite {selectedContacts.size} Contact(s)</Text>
+        <View style={styles.footer}>
+          <TouchableOpacity style={styles.primaryButton} onPress={handleInvite}>
+            <Text style={styles.buttonText}>
+              Invite {selectedContacts.size} Contact(s)
+            </Text>
           </TouchableOpacity>
         </View>
       )}
@@ -214,35 +201,63 @@ const ContactHome: React.FC = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#fff" },
-  headerContainer: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 },
-  header: { fontSize: 24, fontWeight: "700", color: "#000" },
-  selectButton: { paddingHorizontal: 12, paddingVertical: 6, borderRadius: 6, borderWidth: 1, borderColor: "#000" },
-  selectButtonText: { fontSize: 14, color: "#000", fontWeight: "600" },
-  searchInput: { marginHorizontal: 16, marginBottom: 12, borderRadius: 8, backgroundColor: "#f2f2f2", paddingHorizontal: 12, paddingVertical: 8, fontSize: 16 },
-  selectionSummary: { backgroundColor: "#e3f2fd", marginHorizontal: 16, marginBottom: 8, padding: 8, borderRadius: 6 },
-  selectionText: { fontSize: 14, color: "#1976d2", fontWeight: "600" },
-  contactItem: { flexDirection: "row", alignItems: "center", padding: 16, borderBottomWidth: 1, borderBottomColor: "#eee" },
-  selectedContactItem: { backgroundColor: "#f3e5f5" },
-  selectionIndicator: { marginRight: 12 },
-  checkbox: { width: 20, height: 20, borderRadius: 10, borderWidth: 2, borderColor: "#ddd", justifyContent: "center", alignItems: "center", backgroundColor: "#fff" },
-  checkboxSelected: { backgroundColor: "#4caf50", borderColor: "#4caf50" },
-  checkmark: { color: "#fff", fontSize: 12, fontWeight: "bold" },
-  avatar: { width: 50, height: 50, borderRadius: 25, marginRight: 12 },
-  avatarPlaceholder: { width: 50, height: 50, borderRadius: 25, backgroundColor: "#ddd", justifyContent: "center", alignItems: "center", marginRight: 12 },
-  avatarText: { fontSize: 18, fontWeight: "600", color: "#555" },
-  contactInfo: { flex: 1 },
-  contactName: { fontSize: 16, fontWeight: "600", color: "#000" },
-  contactPhone: { fontSize: 14, color: "#555" },
-  contactEmail: { fontSize: 14, color: "#777" },
-  emptyText: { textAlign: "center", marginTop: 20, fontSize: 16, color: "#666" },
-  center: { flex: 1, justifyContent: "center", alignItems: "center" },
-  retryButton: { backgroundColor: "#000", paddingHorizontal: 20, paddingVertical: 10, borderRadius: 8 },
-  retryText: { color: "#fff", fontSize: 16 },
-  inviteButtonContainer: { padding: 16, backgroundColor: "#fff", borderTopWidth: 1, borderTopColor: "#eee" },
-  inviteButton: { backgroundColor: "#4caf50", paddingVertical: 14, paddingHorizontal: 24, borderRadius: 8, alignItems: "center" },
-  inviteButtonText: { color: "#fff", fontSize: 16, fontWeight: "600" },
-});
-
 export default ContactHome;
+
+const styles = StyleSheet.create({
+  container: { flex: 1, backgroundColor: COLORS.background },
+  headerRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    padding: 16,
+    alignItems: "center",
+  },
+  header: {
+    fontSize: FONT.size.heading,
+    fontWeight: FONT.weight.bold,
+    color: COLORS.primary,
+    fontFamily: FONT.family,
+  },
+  selectionText: {
+    color: COLORS.onPrimary,
+    textAlign: "center",
+    marginBottom: 8,
+    fontFamily: FONT.family,
+  },
+  footer: {
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
+    padding: 16,
+    backgroundColor: COLORS.background,
+  },
+  primaryButton: {
+    backgroundColor: COLORS.primary,
+    paddingVertical: 14,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  accentButton: {
+    backgroundColor: COLORS.accent,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+  },
+  buttonText: {
+    color: COLORS.onPrimary,
+    fontSize: FONT.size.button,
+    fontWeight: FONT.weight.bold,
+    fontFamily: FONT.family,
+  },
+  center: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: COLORS.background,
+  },
+  loadingText: {
+    marginTop: 12,
+    fontSize: 16,
+    color: COLORS.onPrimary,
+    fontFamily: FONT.family,
+  },
+});
