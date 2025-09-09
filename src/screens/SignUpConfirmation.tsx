@@ -9,12 +9,16 @@ import {
 } from "react-native";
 import { OtpGeneration } from "../components/OtpGeneration";
 import { COLORS, FONT, INPUT } from "../styles/theme";
+import { useNavigation } from "expo-router";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStack } from "../navigation/RootStackNavigation";
 
 const SignUpConfirmation: React.FC = () => {
   const [generatedOtp, setGeneratedOtp] = useState("");
   const [enteredOtp, setEnteredOtp] = useState("");
   const [error, setError] = useState("");
   const [timeLeft, setTimeLeft] = useState(30);
+  const navigation = useNavigation<NativeStackNavigationProp<RootStack>>();
 
   useEffect(() => {
     generateOtp();
@@ -47,7 +51,7 @@ const SignUpConfirmation: React.FC = () => {
 
     if (enteredOtp === generatedOtp) {
       setError("");
-      Alert.alert("Success", "OTP Verified Successfully!");
+      navigation.navigate("LoginScreen");
     } else {
       setError("Invalid OTP, please try again");
     }

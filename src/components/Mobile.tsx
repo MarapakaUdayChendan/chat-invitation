@@ -32,7 +32,7 @@ const Mobile: React.FC = () => {
     setMobileError("");
     setOtpError("");
     setOtpVisible(true);
-    Alert.alert("OTP Sent", `Your OTP is ${otp}`);
+    console.log("OTP Sent", `Your OTP is ${otp}`);
   };
 
   const handleSubmit = () => {
