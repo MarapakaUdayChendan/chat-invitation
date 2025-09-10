@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useCallback } from "react";
 import {
   View,
   Text,
@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import { useRoute, useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { COLORS, FONT } from "../styles/theme";
 
 interface SelectedContact {
@@ -17,11 +18,27 @@ interface SelectedContact {
 }
 
 export default function InviteContacts() {
-  const route = useRoute<any>();
   const navigation = useNavigation<any>();
-  const { selectedContacts } = route.params as {
-    selectedContacts: SelectedContact[];
-  };
+  const [selectedContacts, setSelectedContacts] = useState<SelectedContact[]>([]);
+
+  // Load contacts from AsyncStorage every time screen is focused
+  useFocusEffect(
+    useCallback(() => {
+      const loadContacts = async () => {
+        try {
+          const json = await AsyncStorage.getItem("INVITED_CONTACTS");
+          if (json) {
+            setSelectedContacts(JSON.parse(json));
+          } else {
+            setSelectedContacts([]);
+          }
+        } catch (e) {
+          console.error("Error loading contacts", e);
+        }
+      };
+      loadContacts();
+    }, [])
+  );
 
   const handleSendIndividualInvite = (contact: SelectedContact) => {
     Alert.alert("Send Invite", `Send invitation to ${contact.name}?`, [

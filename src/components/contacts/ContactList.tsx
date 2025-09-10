@@ -16,6 +16,7 @@ interface Props {
   selectedContacts: Set<string>;
   isSelectionMode: boolean;
   onContactPress: (contact: Contact) => void;
+  onContactLongPress: (contact: Contact) => void;
 }
 
 const ContactList: React.FC<Props> = ({
@@ -23,6 +24,7 @@ const ContactList: React.FC<Props> = ({
   selectedContacts,
   isSelectionMode,
   onContactPress,
+  onContactLongPress,
 }) => {
   return (
     <FlatList
@@ -37,6 +39,7 @@ const ContactList: React.FC<Props> = ({
           isSelected={selectedContacts.has(item.id)}
           isSelectionMode={isSelectionMode}
           onPress={() => onContactPress(item)}
+          onLongPress={() => onContactLongPress(item)}
         />
       )}
       ListEmptyComponent={

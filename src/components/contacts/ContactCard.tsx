@@ -10,6 +10,7 @@ interface Props {
   isSelected?: boolean;
   isSelectionMode: boolean;
   onPress: () => void;
+  onLongPress: () => void;
 }
 
 const ContactCard: React.FC<Props> = ({
@@ -19,11 +20,14 @@ const ContactCard: React.FC<Props> = ({
   isSelected = false,
   isSelectionMode,
   onPress,
+  onLongPress,
 }) => {
   return (
     <TouchableOpacity
       style={[styles.card, isSelected && styles.selected]}
       onPress={onPress}
+      onLongPress={onLongPress}
+      delayLongPress={300}
     >
       {isSelectionMode && (
         <View style={[styles.checkbox, isSelected && styles.checkboxSelected]}>
