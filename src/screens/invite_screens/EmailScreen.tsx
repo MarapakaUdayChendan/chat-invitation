@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -6,12 +7,19 @@ import {
   StyleSheet,
   StatusBar,
   Alert,
+  Image,
 } from "react-native";
-import React, { useState } from "react";
-import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStack } from "../../navigation/RootStackNavigation";
+
+const logo = require("../../../assets/logo/logo.jpg");
+
+type EmailScreenNavigationProp = NativeStackNavigationProp<RootStack, "EmailScreen">;
 
 export default function EmailScreen() {
   const [email, setEmail] = useState("");
+  const navigation = useNavigation<EmailScreenNavigationProp>();
 
   const handleVerifyOTP = () => {
     if (!email) {
@@ -19,59 +27,35 @@ export default function EmailScreen() {
       return;
     }
 
-    // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       Alert.alert("Error", "Please enter a valid email address");
       return;
     }
 
-    // Handle OTP verification logic here
-    console.log("Sending OTP to:", email);
-    // Navigate to next screen or call API
+    navigation.navigate("EmailOtp", { email: email });
   };
 
-  const handleTermsPress = () => {
-    // Handle terms of service navigation
-    console.log("Terms of Service pressed");
-  };
-
-  const handlePrivacyPress = () => {
-    // Handle privacy policy navigation
-    console.log("Privacy Policy pressed");
-  };
-
-  const handleGoBack = () => {
-    // Handle back navigation
-    console.log("Go back pressed");
-  };
+  const handleTermsPress = () => console.log("Terms of Service pressed");
+  const handlePrivacyPress = () => console.log("Privacy Policy pressed");
+  const handleGoBack = () => navigation.goBack();
 
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#fff" />
 
-      {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={handleGoBack}>
-          <Ionicons name="chevron-back" size={24} color="#000" />
-        </TouchableOpacity>
-
         <View style={styles.logoContainer}>
-          <View style={styles.logoIcon}>
-            <Text style={styles.logoText}>WZ</Text>
-          </View>
-          <Text style={styles.brandText}>WORLD ZONE</Text>
+          <Image source={logo} style={styles.logo} />
         </View>
       </View>
 
-      {/* Main Content */}
       <View style={styles.content}>
         <Text style={styles.title}>Enter Your E-Mail</Text>
         <Text style={styles.subtitle}>
           We will Send you a OTP in the below E-Mail
         </Text>
 
-        {/* Email Input */}
         <View style={styles.inputContainer}>
           <Text style={styles.inputLabel}>Email</Text>
           <TextInput
@@ -87,7 +71,6 @@ export default function EmailScreen() {
         </View>
       </View>
 
-      {/* Bottom Section */}
       <View style={styles.bottomSection}>
         <View style={styles.termsContainer}>
           <Text style={styles.termsText}>
@@ -119,8 +102,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
     alignItems: "center",
-    paddingTop: 50,
-    paddingBottom: 30,
+    paddingTop: 30,
   },
   backButton: {
     padding: 5,
@@ -129,31 +111,14 @@ const styles = StyleSheet.create({
   logoContainer: {
     flex: 1,
     alignItems: "center",
-    marginRight: 35, // Compensate for back button width
+    marginRight: 35,
   },
-  logoIcon: {
-    width: 40,
-    height: 40,
+  logo: {
     borderRadius: 8,
-    backgroundColor: "#007AFF",
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 5,
-  },
-  logoText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  brandText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#333",
-    letterSpacing: 1,
   },
   content: {
     flex: 1,
-    paddingTop: 40,
+    justifyContent: "center",
   },
   title: {
     fontSize: 24,
