@@ -48,10 +48,6 @@ const Email: React.FC = () => {
     []
   );
 
-  const generateOTP = () => {
-    return Math.floor(100000 + Math.random() * 900000).toString();
-  };
-
   const handleInputChange = (field: keyof FormData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
     if (touched[field]) {
@@ -94,24 +90,9 @@ const Email: React.FC = () => {
       return;
     }
 
-    const otp = generateOTP();
-    console.log("OTP generated:", otp, "for email:", formData.email);
-
-    Alert.alert(
-      "OTP Sent",
-      `An OTP has been sent to ${formData.email}. For demo purposes, the OTP is: ${otp}`,
-      [
-        {
-          text: "OK",
-          // onPress: () => {
-          //   navigation.navigate("OTPVerification", {
-          //     email: formData.email,
-          //     otp: otp,
-          //   });
-          // },
-        },
-      ]
-    );
+    navigation.navigate("LoginEmailOtp", {
+      email: formData.email,
+    });
   };
 
   const handleForgot = () => {
