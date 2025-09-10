@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Text, View } from "react-native";
 
-const PasswordScreen: React.FC = () => {
+const InviteUsers: React.FC = () => {
   return (
     <View>
       <Text> textInComponent </Text>
@@ -9,4 +9,4 @@ const PasswordScreen: React.FC = () => {
   );
 };
 
-export default PasswordScreen;
+export default InviteUsers;

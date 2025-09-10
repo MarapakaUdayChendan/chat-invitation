@@ -12,6 +12,13 @@ import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
 import ForgotPasswordConfirmation from "../screens/ForgotPasswordConfirmation";
 import ContactHome from "../screens/ContactHome";
 import InviteContacts from "../screens/InviteContacts";
+import OrganizationSelection from "../screens/OrganizationSelection";
+import InviteUsers from "../screens/InviteUsers";
+import MobileScreen from "../screens/invite_screens/MobileScreen";
+import MobileOtp from "../screens/invite_screens/MobileOtp";
+import EmailScreen from "../screens/invite_screens/EmailScreen";
+import EmailOtp from "../screens/invite_screens/EmailOtp";
+import PasswordScreen from "../screens/invite_screens/PasswordScreen";
 
 export type SelectedContact = {
   id: string;
@@ -27,6 +34,13 @@ export type RootStack = {
   ForgotPasswordConfirmation: undefined;
   ContactHome: undefined;
   InviteContacts: { selectedContacts: SelectedContact[] };
+  OrganizationSelection: undefined;
+  InviteUsers: undefined;
+  MobileScreen: undefined;
+  MobileOtp: undefined;
+  EmailScreen: undefined;
+  EmailOtp: undefined;
+  PasswordScreen: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStack>();
@@ -58,6 +72,16 @@ const RootStackNavigation: React.FC = () => {
             />
             <Stack.Screen name="ContactHome" component={ContactHome} />
             <Stack.Screen name="InviteContacts" component={InviteContacts} />
+            <Stack.Screen
+              name="OrganizationSelection"
+              component={OrganizationSelection}
+            />
+            <Stack.Screen name="InviteUsers" component={InviteUsers} />
+            <Stack.Screen name="MobileScreen" component={MobileScreen} />
+            <Stack.Screen name="MobileOtp" component={MobileOtp} />
+            <Stack.Screen name="EmailScreen" component={EmailScreen} />
+            <Stack.Screen name="EmailOtp" component={EmailOtp} />
+            <Stack.Screen name="PasswordScreen" component={PasswordScreen} />
           </Stack.Navigator>
         </SafeAreaView>
       </NavigationContainer>
