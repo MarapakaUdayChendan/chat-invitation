@@ -12,6 +12,7 @@ import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import type { RootStack } from "../navigation/RootStackNavigation";
 import { COLORS, FONT } from "../styles/theme";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import ContactList from "../components/contacts/ContactList";
 import ContactSearch from "../components/contacts/ContactSearch";
@@ -97,11 +98,6 @@ const ContactHome: React.FC = () => {
     });
   }, [searchQuery, contacts]);
 
-  const toggleSelectionMode = useCallback(() => {
-    setIsSelectionMode((prev) => !prev);
-    if (isSelectionMode) setSelectedContacts(new Set());
-  }, [isSelectionMode]);
-
   const toggleContactSelection = useCallback((id: string) => {
     setSelectedContacts((prev) => {
       const next = new Set(prev);
@@ -124,7 +120,15 @@ const ContactHome: React.FC = () => {
     [isSelectionMode, toggleContactSelection]
   );
 
-  const handleInvite = useCallback(() => {
+  const handleContactLongPress = useCallback(
+    (contact: Contact) => {
+      if (!isSelectionMode) setIsSelectionMode(true);
+      toggleContactSelection(contact.id);
+    },
+    [isSelectionMode, toggleContactSelection]
+  );
+
+  const handleInvite = useCallback(async () => {
     const selected: SelectedContact[] = Array.from(selectedContacts)
       .map((id) => {
         const c = contacts.find((c) => c.id === id);
@@ -141,7 +145,14 @@ const ContactHome: React.FC = () => {
     if (!selected.length)
       return Alert.alert("Error", "Please select contacts with phone numbers");
 
-    navigation.navigate("InviteContacts", { selectedContacts: selected });
+    try {
+      await AsyncStorage.setItem("INVITED_CONTACTS", JSON.stringify(selected));
+      console.log("Contacts saved:", selected);
+    } catch (e) {
+      console.error("Failed to save contacts", e);
+    }
+
+    navigation.navigate('OrganizationSelection');
     setSelectedContacts(new Set());
     setIsSelectionMode(false);
   }, [selectedContacts, contacts, navigation]);
@@ -163,14 +174,17 @@ const ContactHome: React.FC = () => {
     <View style={styles.container}>
       <View style={styles.headerRow}>
         <Text style={styles.header}>My Contacts</Text>
-        <TouchableOpacity
-          style={styles.accentButton}
-          onPress={toggleSelectionMode}
-        >
-          <Text style={styles.buttonText}>
-            {isSelectionMode ? "Cancel" : "Select"}
-          </Text>
-        </TouchableOpacity>
+        {isSelectionMode && (
+          <TouchableOpacity
+            style={styles.accentButton}
+            onPress={() => {
+              setIsSelectionMode(false);
+              setSelectedContacts(new Set());
+            }}
+          >
+            <Text style={styles.buttonText}>Cancel</Text>
+          </TouchableOpacity>
+        )}
       </View>
 
       <ContactSearch query={searchQuery} onChange={setSearchQuery} />
@@ -186,6 +200,7 @@ const ContactHome: React.FC = () => {
         selectedContacts={selectedContacts}
         isSelectionMode={isSelectionMode}
         onContactPress={handleContactPress}
+        onContactLongPress={handleContactLongPress}
       />
 
       {isSelectionMode && selectedContacts.size > 0 && (
