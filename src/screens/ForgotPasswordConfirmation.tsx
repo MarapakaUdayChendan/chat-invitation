@@ -67,7 +67,7 @@ const ForgotPasswordConfirmation: React.FC = () => {
     setEmailError("");
     setOtpError("");
     setEnteredOtp("");
-    Alert.alert("OTP Sent", `Your OTP is ${otp}`);
+    console.log("OTP Sent", `Your OTP is ${otp}`);
   };
 
   const handleVerifyOtp = () => {

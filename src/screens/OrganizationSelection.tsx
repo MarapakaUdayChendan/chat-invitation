@@ -1,12 +1,12 @@
-import React, { Component } from 'react'
-import { Text, View } from 'react-native'
+import React, { Component } from "react";
+import { Text, View } from "react-native";
 
-const OrganizationSelection : React.FC = ()=> {
+const OrganizationSelection: React.FC = () => {
+  return (
+    <View>
+      <Text> textInComponent </Text>
+    </View>
+  );
+};
 
-    return (
-      <View>
-        <Text> textInComponent </Text>
-      </View>
-    )
-
-}
+export default OrganizationSelection;
