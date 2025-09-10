@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Text, View } from "react-native";
 
-const EmailScreen: React.FC = () => {
+const InviteUsers: React.FC = () => {
   return (
     <View>
       <Text> textInComponent </Text>
@@ -9,4 +9,4 @@ const EmailScreen: React.FC = () => {
   );
 };
 
-export default EmailScreen;
+export default InviteUsers;
