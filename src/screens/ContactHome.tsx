@@ -152,7 +152,7 @@ const ContactHome: React.FC = () => {
       console.error("Failed to save contacts", e);
     }
 
-    navigation.navigate('OrganizationSelction');
+    navigation.navigate('OrganizationSelection');
     setSelectedContacts(new Set());
     setIsSelectionMode(false);
   }, [selectedContacts, contacts, navigation]);
