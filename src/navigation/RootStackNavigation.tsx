@@ -40,7 +40,7 @@ export type RootStack = {
   MobileOtp: undefined;
   EmailScreen: undefined;
   EmailOtp: { email: string };
-  PasswordScreen: undefined;
+  PasswordScreen: {email: string};
 };
 
 const Stack = createNativeStackNavigator<RootStack>();
@@ -54,7 +54,7 @@ const RootStackNavigation: React.FC = () => {
           <Stack.Navigator
             screenOptions={{ headerShown: false }}
             // initialRouteName="LandingScreen"
-            initialRouteName="EmailScreen"
+            initialRouteName="MobileScreen"
           >
             <Stack.Screen name="LandingScreen" component={LandingScreen} />
             <Stack.Screen name="LoginScreen" component={LoginScreen} />
