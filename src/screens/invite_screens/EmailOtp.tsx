@@ -27,7 +27,7 @@ const EmailOtp: React.FC<EmailOtpScreenProps> = ({ route }) => {
   const navigation = useNavigation<EmailOtpNavigationProp>();
   const { email } = route.params;
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
-  const [timer, setTimer] = useState(56);
+  const [timer, setTimer] = useState(30);
   const [generatedOtp, setGeneratedOtp] = useState<string | null>(null);
   const [statusMessage, setStatusMessage] = useState<string>("");
   const inputRefs = useRef<TextInput[]>([]);
@@ -37,7 +37,7 @@ const EmailOtp: React.FC<EmailOtpScreenProps> = ({ route }) => {
     setGeneratedOtp(generated);
     console.log("Generated OTP:", generated);
   }, []);
-
+  
   useEffect(() => {
     if (timer > 0) {
       const interval = setInterval(() => {
@@ -77,6 +77,7 @@ const EmailOtp: React.FC<EmailOtpScreenProps> = ({ route }) => {
     if (otpValue === generatedOtp) {
       setStatusMessage("OTP Matched");
       console.log("OTP Matched");
+      navigation.navigate("PasswordScreen",{email});
     } else {
       setStatusMessage("Invalid OTP");
       console.log("Invalid OTP");
@@ -88,7 +89,7 @@ const EmailOtp: React.FC<EmailOtpScreenProps> = ({ route }) => {
       const newOtp = OtpGenerationSix();
       console.log("Resent OTP:", newOtp);
       setGeneratedOtp(newOtp);
-      setTimer(56);
+      setTimer(30);
       setOtp(["", "", "", "", "", ""]);
       setStatusMessage("");
       inputRefs.current[0]?.focus();
