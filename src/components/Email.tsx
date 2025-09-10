@@ -7,6 +7,7 @@ import {
   Text,
   StyleSheet,
   Keyboard,
+  Alert,
 } from "react-native";
 import { COLORS, FONT, INPUT } from "../styles/theme";
 
@@ -47,6 +48,10 @@ const Email: React.FC = () => {
     []
   );
 
+  const generateOTP = () => {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+  };
+
   const handleInputChange = (field: keyof FormData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
     if (touched[field]) {
@@ -81,6 +86,34 @@ const Email: React.FC = () => {
     }
   };
 
+  const handleLoginWithOTP = () => {
+    const emailError = validateEmail(formData.email);
+    if (emailError) {
+      setErrors({ email: emailError, password: "" });
+      setTouched({ email: true, password: false });
+      return;
+    }
+
+    const otp = generateOTP();
+    console.log("OTP generated:", otp, "for email:", formData.email);
+
+    Alert.alert(
+      "OTP Sent",
+      `An OTP has been sent to ${formData.email}. For demo purposes, the OTP is: ${otp}`,
+      [
+        {
+          text: "OK",
+          // onPress: () => {
+          //   navigation.navigate("OTPVerification", {
+          //     email: formData.email,
+          //     otp: otp,
+          //   });
+          // },
+        },
+      ]
+    );
+  };
+
   const handleForgot = () => {
     navigation.navigate("ForgotPasswordConfirmation");
   };
@@ -93,6 +126,8 @@ const Email: React.FC = () => {
 
   const isFormValid =
     !errors.email && !errors.password && formData.email && formData.password;
+
+  const isEmailValid = !errors.email && formData.email;
 
   return (
     <View style={styles.card}>
@@ -135,17 +170,34 @@ const Email: React.FC = () => {
         <Text style={styles.errorText}>{errors.password}</Text>
       )}
 
+      <View style={styles.forgotContainer}>
+        <TouchableOpacity onPress={handleForgot}>
+          <Text style={styles.forgotText}>Forgot your password?</Text>
+        </TouchableOpacity>
+      </View>
+
       <TouchableOpacity
-        style={[styles.loginButton, !isFormValid && { opacity: 0.6 }]}
+        style={[styles.loginButton, !isFormValid && styles.buttonDisabled]}
         onPress={handleLogin}
         disabled={!isFormValid}
       >
         <Text style={styles.loginText}>Sign In</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.forgotWrapper} onPress={handleForgot}>
-        <Text style={styles.forgotText}>Forgot your password?</Text>
+      <TouchableOpacity
+        style={[styles.otpButton, !isEmailValid && styles.buttonDisabled]}
+        onPress={handleLoginWithOTP}
+        disabled={!isEmailValid}
+      >
+        <Text style={styles.otpText}>Login using OTP</Text>
       </TouchableOpacity>
+
+      <View style={styles.privacyContainer}>
+        <Text style={styles.privacyText}>
+          By clicking continue, you agree to our{" "}
+          <Text style={styles.privacyLink}>Privacy Policy</Text>.
+        </Text>
+      </View>
     </View>
   );
 };
@@ -194,14 +246,37 @@ const styles = StyleSheet.create({
     fontWeight: FONT.weight.medium,
     fontFamily: FONT.family,
   },
+  forgotContainer: {
+    alignItems: "flex-end",
+    marginTop: -8,
+    marginBottom: 16,
+  },
+  forgotText: {
+    fontSize: FONT.size.label,
+    color: COLORS.accent,
+    fontWeight: FONT.weight.bold,
+    textDecorationLine: "underline",
+    fontFamily: FONT.family,
+  },
   loginButton: {
     backgroundColor: COLORS.primary,
     borderRadius: 10,
     paddingVertical: 14,
     alignItems: "center",
-    marginTop: 8,
-    marginBottom: 16,
+    marginBottom: 12,
     elevation: 2,
+  },
+  otpButton: {
+    backgroundColor: COLORS.surface,
+    borderWidth: 1,
+    borderColor: COLORS.primary,
+    borderRadius: 10,
+    paddingVertical: 14,
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  buttonDisabled: {
+    opacity: 0.6,
   },
   loginText: {
     color: COLORS.onPrimary,
@@ -210,12 +285,25 @@ const styles = StyleSheet.create({
     fontFamily: FONT.family,
     letterSpacing: 0.5,
   },
-  forgotWrapper: { alignItems: "center", paddingVertical: 8 },
-  forgotText: {
-    fontSize: FONT.size.label,
+  otpText: {
+    color: COLORS.primary,
+    fontSize: FONT.size.button,
+    fontWeight: FONT.weight.bold,
+    fontFamily: FONT.family,
+    letterSpacing: 0.5,
+  },
+  privacyContainer: {
+    alignItems: "center",
+  },
+  privacyText: {
+    fontSize: 12,
     color: COLORS.accent,
+    fontFamily: FONT.family,
+    textAlign: "center",
+  },
+  privacyLink: {
+    color: COLORS.primary,
     fontWeight: FONT.weight.bold,
     textDecorationLine: "underline",
-    fontFamily: FONT.family,
   },
 });
