@@ -5,7 +5,6 @@ import {
   TouchableOpacity,
   StyleSheet,
   StatusBar,
-  Alert,
   Image,
 } from "react-native";
 import React, { useState } from "react";
@@ -18,53 +17,48 @@ export default function MobileScreen() {
   const [mobileNumber, setMobileNumber] = useState("");
   const [countryCode, setCountryCode] = useState("+91");
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
   const navigation = useNavigation<NativeStackNavigationProp<RootStack>>();
-  const generateOTP = () => {
-    return Math.floor(100000 + Math.random() * 900000).toString();
-  };
 
   const handleVerifyOTP = () => {
-    if (!mobileNumber) {
-      Alert.alert("Error", "Please enter your mobile number");
+    setError("");
+
+    const cleanedNumber = mobileNumber.replace(/\D/g, "");
+
+    if (!cleanedNumber) {
+      setError("Please enter your mobile number");
+      return;
+    }
+
+    if (cleanedNumber.length !== 10) {
+      setError("Please enter a valid 10-digit mobile number");
       return;
     }
 
     const mobileRegex = /^[6-9]\d{9}$/;
-    if (!mobileRegex.test(mobileNumber)) {
-      Alert.alert("Error", "Please enter a valid 10-digit mobile number");
+    if (!mobileRegex.test(cleanedNumber)) {
+      setError("Please enter a valid mobile number starting with 6-9");
       return;
     }
 
     setIsLoading(true);
 
     setTimeout(() => {
-      const otp = generateOTP();
-      const fullNumber = countryCode + mobileNumber;
-
-      console.log("OTP generated:", otp);
-      console.log("Sending to:", fullNumber);
+      const fullNumber = countryCode + cleanedNumber;
+      console.log("Navigating to OTP screen with:", fullNumber);
 
       setIsLoading(false);
+      navigation.navigate("MobileOtp", { mobileNumber: fullNumber });
+    }, 1000);
+  };
 
-      Alert.alert(
-        "OTP Generated",
-        `your OTP is: ${otp}\n\nYou can pass this to your MobileOTP screen.`,
-        [
-          {
-            text: "OK",
-            onPress: () => {
-              navigation.navigate("MobileOtp");
-              /*
-             {
-                otp: otp,
-                mobileNumber: fullNumber,
-              }
-             */
-            },
-          },
-        ]
-      );
-    }, 1500);
+  const handleMobileNumberChange = (text: string) => {
+    const cleanedText = text.replace(/\D/g, "");
+    setMobileNumber(cleanedText);
+
+    if (error) {
+      setError("");
+    }
   };
 
   const handleTermsPress = () => {
@@ -75,12 +69,8 @@ export default function MobileScreen() {
     console.log("Privacy Policy pressed");
   };
 
-  const handleGoBack = () => {
-    console.log("Go back pressed");
-  };
-
   const handleCountryCodeChange = () => {
-    Alert.alert("Info", "Country code selector would open here");
+    console.log("Country code selector would open here");
   };
 
   return (
@@ -105,24 +95,28 @@ export default function MobileScreen() {
           <Text style={styles.inputLabel}>Mobile Number</Text>
           <View style={styles.phoneInputContainer}>
             <TouchableOpacity
-              style={styles.countryCodeButton}
+              style={[
+                styles.countryCodeButton,
+                error ? styles.countryCodeError : null,
+              ]}
               onPress={handleCountryCodeChange}
             >
               <Text style={styles.countryCodeText}>{countryCode}</Text>
               <Ionicons name="chevron-down" size={16} color="#666" />
             </TouchableOpacity>
             <TextInput
-              style={styles.phoneInput}
+              style={[styles.phoneInput, error ? styles.inputError : null]}
               placeholder="1234567890"
               placeholderTextColor="#999"
               value={mobileNumber}
-              onChangeText={setMobileNumber}
+              onChangeText={handleMobileNumberChange}
               keyboardType="phone-pad"
               autoCapitalize="none"
               autoCorrect={false}
               maxLength={10}
             />
           </View>
+          {error ? <Text style={styles.errorText}>{error}</Text> : null}
         </View>
       </View>
 
@@ -138,15 +132,16 @@ export default function MobileScreen() {
           <TouchableOpacity onPress={handlePrivacyPress}>
             <Text style={styles.linkText}>Privacy Policy</Text>
           </TouchableOpacity>
+          <Text style={styles.termsText}>.</Text>
         </View>
 
         <TouchableOpacity
           style={[
             styles.verifyButton,
-            isLoading && styles.verifyButtonDisabled,
+            (isLoading || !mobileNumber) && styles.verifyButtonDisabled,
           ]}
           onPress={handleVerifyOTP}
-          disabled={isLoading}
+          disabled={isLoading || !mobileNumber}
         >
           {isLoading ? (
             <Text style={styles.verifyButtonText}>Sending OTP...</Text>
@@ -168,6 +163,7 @@ const styles = StyleSheet.create({
   logoContainer: {
     alignItems: "center",
     justifyContent: "center",
+    paddingTop: 40,
   },
   logoImage: {
     width: 180,
@@ -223,6 +219,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     backgroundColor: "#FAFAFA",
   },
+  countryCodeError: {
+    borderColor: "#FF3B30",
+  },
   countryCodeText: {
     fontSize: 16,
     color: "#000",
@@ -238,6 +237,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     fontSize: 16,
     backgroundColor: "#FAFAFA",
+  },
+  inputError: {
+    borderColor: "#FF3B30",
+  },
+  errorText: {
+    color: "#FF3B30",
+    fontSize: 14,
+    marginTop: 8,
+    alignSelf: "flex-start",
+    marginLeft: 10,
   },
   bottomSection: {
     paddingBottom: 30,
@@ -269,6 +278,7 @@ const styles = StyleSheet.create({
   },
   verifyButtonDisabled: {
     backgroundColor: "#66A3FF",
+    opacity: 0.7,
   },
   verifyButtonText: {
     color: "#fff",

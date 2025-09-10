@@ -6,39 +6,37 @@ import {
   TouchableOpacity,
   StyleSheet,
   StatusBar,
-  Image,
-  ScrollView,
   KeyboardAvoidingView,
   Platform,
+  ScrollView,
+  Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "expo-router";
-import {
-  NativeStackNavigationProp,
-  NativeStackScreenProps,
-} from "@react-navigation/native-stack";
-import { RootStack } from "../../navigation/RootStackNavigation";
-import { OtpGenerationSix } from "../../components/OtpGenerationSix";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { RootStack } from "./navigation/RootStackNavigation";
+import { OtpGeneration } from "./components/OtpGeneration";
+import { COLORS } from "./styles/theme";
 
-type MobileOtpScreenProps = NativeStackScreenProps<RootStack, "MobileOtp">;
-type MobileOtpNavigationProp = NativeStackNavigationProp<
+type LoginEmailOtpScreenProps = NativeStackScreenProps<
   RootStack,
-  "MobileOtp"
+  "LoginEmailOtp"
 >;
 
-const logo = require("../../../assets/logo/logo.jpg");
-
-const MobileOtp: React.FC<MobileOtpScreenProps> = ({ route }) => {
-  const navigation = useNavigation<MobileOtpNavigationProp>();
-  const { mobileNumber } = route.params;
-  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
-  const [timer, setTimer] = useState(56);
+const LoginEmailOtp: React.FC<LoginEmailOtpScreenProps> = ({ route }) => {
+  const navigation = useNavigation<any>();
+  const { email } = route.params;
+  const [otp, setOtp] = useState(["", "", "", ""]);
+  const [timer, setTimer] = useState(60);
   const [generatedOtp, setGeneratedOtp] = useState<string | null>(null);
   const [statusMessage, setStatusMessage] = useState<string>("");
+  const [statusType, setStatusType] = useState<"success" | "error" | "">("");
   const inputRefs = useRef<TextInput[]>([]);
 
+  const themeColor = "#4A90E2";
+
   useEffect(() => {
-    const generated = OtpGenerationSix();
+    const generated = OtpGeneration();
     setGeneratedOtp(generated);
     console.log("Generated OTP:", generated);
   }, []);
@@ -53,11 +51,17 @@ const MobileOtp: React.FC<MobileOtpScreenProps> = ({ route }) => {
   }, [timer]);
 
   const handleOtpChange = (value: string, index: number) => {
-    if (value.length <= 1) {
+    if (/^\d*$/.test(value)) {
       const newOtp = [...otp];
       newOtp[index] = value;
       setOtp(newOtp);
-      if (value && index < 5) {
+
+      if (statusType === "error") {
+        setStatusMessage("");
+        setStatusType("");
+      }
+
+      if (value && index < 3) {
         inputRefs.current[index + 1]?.focus();
       }
     }
@@ -71,42 +75,61 @@ const MobileOtp: React.FC<MobileOtpScreenProps> = ({ route }) => {
 
   const handleSubmit = () => {
     const otpValue = otp.join("");
-    if (otpValue.length !== 6) {
+    if (otpValue.length !== 4) {
       setStatusMessage("Please enter complete OTP");
-      return;
+      setStatusType("error");
+      return false;
     }
+
     if (timer === 0) {
       setStatusMessage("OTP expired, please resend");
-      return;
+      setStatusType("error");
+      return false;
     }
+
     if (otpValue === generatedOtp) {
       setStatusMessage("OTP Matched");
+      setStatusType("success");
       console.log("OTP Matched");
-      navigation.navigate("EmailScreen");
+      navigation.navigate("ContactHome");
+      return true;
     } else {
       setStatusMessage("Invalid OTP");
+      setStatusType("error");
       console.log("Invalid OTP");
+      return false;
     }
   };
 
   const handleResendOtp = () => {
     if (timer === 0) {
-      const newOtp = OtpGenerationSix();
+      const newOtp = OtpGeneration();
       console.log("Resent OTP:", newOtp);
       setGeneratedOtp(newOtp);
-      setTimer(56);
-      setOtp(["", "", "", "", "", ""]);
-      setStatusMessage("");
+      setTimer(60);
+      setOtp(["", "", "", ""]);
+      setStatusMessage("New OTP sent to your email");
+      setStatusType("success");
       inputRefs.current[0]?.focus();
+
+      setTimeout(() => {
+        setStatusMessage("");
+        setStatusType("");
+      }, 3000);
     }
   };
 
-  const handleEditMobile = () => {
+  const handleEditEmail = () => {
     navigation.goBack();
   };
 
-  const handleTermsPress = () => console.log("Terms of Service pressed");
-  const handlePrivacyPress = () => console.log("Privacy Policy pressed");
+  const handleTermsPress = () =>
+    Alert.alert(
+      "Terms of Service",
+      "Terms of service content would appear here."
+    );
+  const handlePrivacyPress = () =>
+    Alert.alert("Privacy Policy", "Privacy policy content would appear here.");
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -124,21 +147,16 @@ const MobileOtp: React.FC<MobileOtpScreenProps> = ({ route }) => {
       <StatusBar barStyle="dark-content" backgroundColor="#fff" />
 
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        {/* Logo at the top */}
-        <View style={styles.logoContainer}>
-          <Image source={logo} style={styles.logoImage} resizeMode="contain" />
-        </View>
-
         <View style={styles.content}>
-          <Text style={styles.title}>Verify Mobile Number</Text>
-          <View style={styles.mobileContainer}>
+          <Text style={styles.title}>Verify Email</Text>
+          <View style={styles.emailContainer}>
             <Text style={styles.subtitle}>
-              We have sent a 6 digit verification code to{" "}
+              We have sent a 4 digit verification code to{" "}
             </Text>
-            <View style={styles.mobileRow}>
-              <Text style={styles.mobileText}>{mobileNumber}</Text>
-              <TouchableOpacity onPress={handleEditMobile}>
-                <Ionicons name="pencil" size={16} color="#007AFF" />
+            <View style={styles.emailRow}>
+              <Text style={styles.emailText}>{email}</Text>
+              <TouchableOpacity onPress={handleEditEmail}>
+                <Ionicons name="pencil" size={16} color={themeColor} />
               </TouchableOpacity>
             </View>
           </View>
@@ -148,15 +166,20 @@ const MobileOtp: React.FC<MobileOtpScreenProps> = ({ route }) => {
               <TextInput
                 key={index}
                 ref={(ref) => {
-                  inputRefs.current[index] = ref as TextInput;
+                  if (ref) inputRefs.current[index] = ref;
                 }}
-                style={[styles.otpInput, digit && styles.otpInputFilled]}
+                style={[
+                  styles.otpInput,
+                  digit && styles.otpInputFilled,
+                  statusType === "error" && styles.otpInputError,
+                ]}
                 value={digit}
                 onChangeText={(value) => handleOtpChange(value, index)}
                 onKeyPress={(e) => handleKeyPress(e, index)}
                 keyboardType="numeric"
                 maxLength={1}
                 textAlign="center"
+                selectTextOnFocus
               />
             ))}
           </View>
@@ -165,7 +188,9 @@ const MobileOtp: React.FC<MobileOtpScreenProps> = ({ route }) => {
             <Text
               style={[
                 styles.statusMessage,
-                { color: statusMessage.includes("Matched") ? "green" : "red" },
+                {
+                  color: statusType === "success" ? "#4CAF50" : "#FF3B30",
+                },
               ]}
             >
               {statusMessage}
@@ -176,7 +201,11 @@ const MobileOtp: React.FC<MobileOtpScreenProps> = ({ route }) => {
             <Text style={styles.resendText}>Didn't receive code? </Text>
             <TouchableOpacity onPress={handleResendOtp} disabled={timer > 0}>
               <Text
-                style={[styles.resendLink, timer > 0 && styles.disabledLink]}
+                style={[
+                  styles.resendLink,
+                  { color: themeColor },
+                  timer > 0 && styles.disabledLink,
+                ]}
               >
                 Resend
               </Text>
@@ -191,16 +220,23 @@ const MobileOtp: React.FC<MobileOtpScreenProps> = ({ route }) => {
               By clicking continue, you agree to our{" "}
             </Text>
             <TouchableOpacity onPress={handleTermsPress}>
-              <Text style={styles.linkText}>Terms of Service</Text>
+              <Text style={[styles.linkText, { color: themeColor }]}>
+                Terms of Service
+              </Text>
             </TouchableOpacity>
             <Text style={styles.termsText}> and </Text>
             <TouchableOpacity onPress={handlePrivacyPress}>
-              <Text style={styles.linkText}>Privacy Policy</Text>
+              <Text style={[styles.linkText, { color: themeColor }]}>
+                Privacy Policy
+              </Text>
             </TouchableOpacity>
             <Text style={styles.termsText}>.</Text>
           </View>
 
-          <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+          <TouchableOpacity
+            style={[styles.submitButton, { backgroundColor: themeColor }]}
+            onPress={handleSubmit}
+          >
             <Text style={styles.submitButtonText}>Submit</Text>
           </TouchableOpacity>
         </View>
@@ -219,14 +255,14 @@ const styles = StyleSheet.create({
     padding: 20,
     justifyContent: "space-between",
   },
-  logoContainer: {
+  header: {
+    flexDirection: "row",
     alignItems: "center",
-    marginTop: 40,
-    marginBottom: 20,
+    marginTop: 20,
+    marginBottom: 10,
   },
-  logoImage: {
-    width: 120,
-    height: 120,
+  backButton: {
+    padding: 8,
   },
   content: {
     flex: 1,
@@ -238,28 +274,28 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 12,
-    color: "#000",
+    color: "#000000",
     textAlign: "center",
   },
-  mobileContainer: {
+  emailContainer: {
     alignItems: "center",
     marginBottom: 24,
   },
   subtitle: {
     fontSize: 14,
-    color: "#666",
+    color: "#666666",
     textAlign: "center",
   },
-  mobileRow: {
+  emailRow: {
     flexDirection: "row",
     alignItems: "center",
     marginTop: 8,
   },
-  mobileText: {
+  emailText: {
     fontSize: 16,
     fontWeight: "600",
     marginRight: 8,
-    color: "#000",
+    color: "#000000",
   },
   otpContainer: {
     flexDirection: "row",
@@ -269,18 +305,22 @@ const styles = StyleSheet.create({
   },
   otpInput: {
     borderWidth: 1,
-    borderColor: "#E5E5E5",
+    borderColor: "#DDDDDD",
     borderRadius: 8,
-    width: 44,
-    height: 52,
-    marginHorizontal: 6,
-    fontSize: 18,
+    width: 52,
+    height: 60,
+    marginHorizontal: 8,
+    fontSize: 20,
     fontWeight: "600",
-    backgroundColor: "#FAFAFA",
+    backgroundColor: "#FFFFFF",
+    color: "#000000",
   },
   otpInputFilled: {
-    borderColor: "#007AFF",
-    backgroundColor: "#fff",
+    borderColor: "#4A90E2",
+    backgroundColor: "#FFFFFF",
+  },
+  otpInputError: {
+    borderColor: "#FF3B30",
   },
   statusMessage: {
     textAlign: "center",
@@ -298,15 +338,14 @@ const styles = StyleSheet.create({
   },
   resendText: {
     fontSize: 14,
-    color: "#666",
+    color: "#666666",
   },
   resendLink: {
     fontSize: 14,
-    color: "#007AFF",
     fontWeight: "600",
   },
   disabledLink: {
-    color: "#aaa",
+    color: "#999999",
   },
   bottomSection: {
     width: "100%",
@@ -322,17 +361,15 @@ const styles = StyleSheet.create({
   },
   termsText: {
     fontSize: 12,
-    color: "#666",
+    color: "#666666",
     lineHeight: 18,
   },
   linkText: {
     fontSize: 12,
-    color: "#007AFF",
     fontWeight: "600",
     lineHeight: 18,
   },
   submitButton: {
-    backgroundColor: "#007AFF",
     width: "100%",
     height: 50,
     borderRadius: 8,
@@ -346,4 +383,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MobileOtp;
+export default LoginEmailOtp;

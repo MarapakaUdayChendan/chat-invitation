@@ -19,6 +19,7 @@ import MobileOtp from "../screens/invite_screens/MobileOtp";
 import EmailScreen from "../screens/invite_screens/EmailScreen";
 import EmailOtp from "../screens/invite_screens/EmailOtp";
 import PasswordScreen from "../screens/invite_screens/PasswordScreen";
+import LoginEmailOtp from "../LoginEmailOtp";
 
 export type SelectedContact = {
   id: string;
@@ -28,6 +29,7 @@ export type SelectedContact = {
 export type RootStack = {
   LandingScreen: undefined;
   LoginScreen: undefined;
+  LoginEmailOtp: { email: string };
   SignUpScreen: undefined;
   SignUpConfirmation: undefined;
   ForgotPasswordScreen: undefined;
@@ -37,7 +39,7 @@ export type RootStack = {
   OrganizationSelection: undefined;
   InviteUsers: undefined;
   MobileScreen: undefined;
-  MobileOtp: undefined;
+  MobileOtp: { mobileNumber: string };
   EmailScreen: undefined;
   EmailOtp: { email: string };
   PasswordScreen: undefined;
@@ -53,11 +55,11 @@ const RootStackNavigation: React.FC = () => {
         <SafeAreaView style={styles.safeArea} edges={["top", "left", "right"]}>
           <Stack.Navigator
             screenOptions={{ headerShown: false }}
-            // initialRouteName="LandingScreen"
-            initialRouteName="EmailScreen"
+            initialRouteName="LoginScreen"
           >
             <Stack.Screen name="LandingScreen" component={LandingScreen} />
             <Stack.Screen name="LoginScreen" component={LoginScreen} />
+            <Stack.Screen name="LoginEmailOtp" component={LoginEmailOtp} />
             <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
             <Stack.Screen
               name="SignUpConfirmation"
