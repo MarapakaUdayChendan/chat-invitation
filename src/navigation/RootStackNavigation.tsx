@@ -53,7 +53,7 @@ const RootStackNavigation: React.FC = () => {
         <SafeAreaView style={styles.safeArea} edges={["top", "left", "right"]}>
           <Stack.Navigator
             screenOptions={{ headerShown: false }}
-            initialRouteName="LandingScreen"
+            initialRouteName="MobileScreen"
           >
             <Stack.Screen name="LandingScreen" component={LandingScreen} />
             <Stack.Screen name="LoginScreen" component={LoginScreen} />
