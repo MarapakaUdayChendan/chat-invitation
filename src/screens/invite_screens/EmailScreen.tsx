@@ -13,9 +13,12 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStack } from "../../navigation/RootStackNavigation";
 
-const logo = require("../../../assets/logo/logo.jpg");
+const logo = require("../../../assets/logo/logo1.png");
 
-type EmailScreenNavigationProp = NativeStackNavigationProp<RootStack, "EmailScreen">;
+type EmailScreenNavigationProp = NativeStackNavigationProp<
+  RootStack,
+  "EmailScreen"
+>;
 
 export default function EmailScreen() {
   const [email, setEmail] = useState("");

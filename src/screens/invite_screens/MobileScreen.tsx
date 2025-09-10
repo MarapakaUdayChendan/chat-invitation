@@ -79,7 +79,7 @@ export default function MobileScreen() {
 
       <View style={styles.logoContainer}>
         <Image
-          source={require("../../../assets/logo/logo.jpg")}
+          source={require("../../../assets/logo/logo1.png")}
           style={styles.logoImage}
           resizeMode="contain"
         />

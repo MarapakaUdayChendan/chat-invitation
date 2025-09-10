@@ -13,13 +13,19 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { NativeStackNavigationProp, NativeStackScreenProps } from "@react-navigation/native-stack";
+import {
+  NativeStackNavigationProp,
+  NativeStackScreenProps,
+} from "@react-navigation/native-stack";
 import { RootStack } from "../../navigation/RootStackNavigation";
 
-const logo = require("../../../assets/logo/logo.jpg");
+const logo = require("../../../assets/logo/logo1.png");
 
 type PasswordScreenProps = NativeStackScreenProps<RootStack, "PasswordScreen">;
-type PasswordScreenNavigationProp = NativeStackNavigationProp<RootStack, "PasswordScreen">;
+type PasswordScreenNavigationProp = NativeStackNavigationProp<
+  RootStack,
+  "PasswordScreen"
+>;
 
 const PasswordScreen: React.FC<PasswordScreenProps> = ({ route }) => {
   const navigation = useNavigation<PasswordScreenNavigationProp>();
@@ -37,22 +43,22 @@ const PasswordScreen: React.FC<PasswordScreenProps> = ({ route }) => {
       setPasswordError("Please enter a password");
       return false;
     }
-    
+
     if (value.length < 6) {
       setPasswordError("Password must be at least 6 characters long");
       return false;
     }
-    
+
     if (!/[A-Z]/.test(value)) {
       setPasswordError("Password must contain at least one capital letter");
       return false;
     }
-    
+
     if (!/[0-9]/.test(value)) {
       setPasswordError("Password must contain at least one number");
       return false;
     }
-    
+
     setPasswordError("");
     return true;
   };
@@ -62,12 +68,12 @@ const PasswordScreen: React.FC<PasswordScreenProps> = ({ route }) => {
       setConfirmPasswordError("Please confirm your password");
       return false;
     }
-    
+
     if (password && value !== password) {
       setConfirmPasswordError("Passwords do not match");
       return false;
     }
-    
+
     setConfirmPasswordError("");
     return true;
   };
@@ -79,8 +85,7 @@ const PasswordScreen: React.FC<PasswordScreenProps> = ({ route }) => {
     } else {
       setPasswordError("");
     }
-    
-    // Re-validate confirm password if it exists
+
     if (confirmPassword) {
       if (value !== confirmPassword) {
         setConfirmPasswordError("Passwords do not match");
@@ -105,7 +110,6 @@ const PasswordScreen: React.FC<PasswordScreenProps> = ({ route }) => {
 
     if (isPasswordValid && isConfirmPasswordValid) {
       console.log("Password confirmed successfully");
-      // Navigate to next screen or complete registration
     }
   };
 
@@ -115,130 +119,133 @@ const PasswordScreen: React.FC<PasswordScreenProps> = ({ route }) => {
 
   return (
     <KeyboardAvoidingView
-    style={{ flex: 1 }}
-    behavior={Platform.OS === "ios" ? "padding" : "height"}
-    keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 0}
-  >
-    <ScrollView
-      contentContainerStyle={{ flexGrow: 1 }}
-      keyboardShouldPersistTaps="handled"
-      showsVerticalScrollIndicator={false}
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 0}
     >
-    <View style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.container}>
+          <StatusBar barStyle="dark-content" backgroundColor="#fff" />
 
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={handleGoBack}>
-          <Ionicons name="chevron-back" size={24} color="#000" />
-        </TouchableOpacity>
+          <View style={styles.header}>
+            <TouchableOpacity style={styles.backButton} onPress={handleGoBack}>
+              <Ionicons name="chevron-back" size={24} color="#000" />
+            </TouchableOpacity>
 
-        <View style={styles.logoContainer}>
-          <Image source={logo} style={styles.logo} />
-        </View>
-      </View>
-
-      <View style={styles.content}>
-        <Text style={styles.title}>Confirm your Password</Text>
-        <Text style={styles.subtitle}>
-          We will Send you a OTP in the below E-Mail
-        </Text>
-
-        <View style={styles.inputContainer}>
-          <Text style={styles.inputLabel}>Email</Text>
-          <View style={styles.emailInputContainer}>
-            <TextInput
-              style={styles.emailInput}
-              value={email}
-              editable={false}
-              placeholderTextColor="#999"
-            />
-            <Ionicons name="checkmark-circle" size={20} color="#4CAF50" />
+            <View style={styles.logoContainer}>
+              <Image source={logo} style={styles.logo} />
+            </View>
           </View>
-        </View>
 
-        <View style={styles.inputContainer}>
-          <Text style={styles.inputLabel}>Password</Text>
-          <View style={styles.passwordInputContainer}>
-            <TextInput
-              style={styles.passwordInput}
-              placeholder="Type password"
-              placeholderTextColor="#999"
-              value={password}
-              onChangeText={handlePasswordChange}
-              secureTextEntry={!showPassword}
-              autoCapitalize="none"
-              autoCorrect={false}
-            />
-            {password.length > 0 && (
-              <TouchableOpacity
-                onPress={() => setShowPassword(!showPassword)}
-                style={styles.eyeIcon}
-              >
-                <Ionicons 
-                  name={showPassword ? "eye-off" : "eye"} 
-                  size={20} 
-                  color="#666" 
+          <View style={styles.content}>
+            <Text style={styles.title}>Confirm your Password</Text>
+            <Text style={styles.subtitle}>
+              We will Send you a OTP in the below E-Mail
+            </Text>
+
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputLabel}>Email</Text>
+              <View style={styles.emailInputContainer}>
+                <TextInput
+                  style={styles.emailInput}
+                  value={email}
+                  editable={false}
+                  placeholderTextColor="#999"
                 />
-              </TouchableOpacity>
-            )}
-          </View>
-          {passwordError ? (
-            <Text style={styles.errorText}>{passwordError}</Text>
-          ) : null}
-        </View>
+                <Ionicons name="checkmark-circle" size={20} color="#4CAF50" />
+              </View>
+            </View>
 
-        <View style={styles.inputContainer}>
-          <Text style={styles.inputLabel}>Confirm Password</Text>
-          <View style={styles.passwordInputContainer}>
-            <TextInput
-              style={styles.passwordInput}
-              placeholder="Type password"
-              placeholderTextColor="#999"
-              value={confirmPassword}
-              onChangeText={handleConfirmPasswordChange}
-              secureTextEntry={!showConfirmPassword}
-              autoCapitalize="none"
-              autoCorrect={false}
-            />
-            {confirmPassword.length > 0 && (
-              <TouchableOpacity
-                onPress={() => setShowConfirmPassword(!showConfirmPassword)}
-                style={styles.eyeIcon}
-              >
-                <Ionicons 
-                  name={showConfirmPassword ? "eye-off" : "eye"} 
-                  size={20} 
-                  color="#666" 
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputLabel}>Password</Text>
+              <View style={styles.passwordInputContainer}>
+                <TextInput
+                  style={styles.passwordInput}
+                  placeholder="Type password"
+                  placeholderTextColor="#999"
+                  value={password}
+                  onChangeText={handlePasswordChange}
+                  secureTextEntry={!showPassword}
+                  autoCapitalize="none"
+                  autoCorrect={false}
                 />
-              </TouchableOpacity>
-            )}
+                {password.length > 0 && (
+                  <TouchableOpacity
+                    onPress={() => setShowPassword(!showPassword)}
+                    style={styles.eyeIcon}
+                  >
+                    <Ionicons
+                      name={showPassword ? "eye-off" : "eye"}
+                      size={20}
+                      color="#666"
+                    />
+                  </TouchableOpacity>
+                )}
+              </View>
+              {passwordError ? (
+                <Text style={styles.errorText}>{passwordError}</Text>
+              ) : null}
+            </View>
+
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputLabel}>Confirm Password</Text>
+              <View style={styles.passwordInputContainer}>
+                <TextInput
+                  style={styles.passwordInput}
+                  placeholder="Type password"
+                  placeholderTextColor="#999"
+                  value={confirmPassword}
+                  onChangeText={handleConfirmPasswordChange}
+                  secureTextEntry={!showConfirmPassword}
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                />
+                {confirmPassword.length > 0 && (
+                  <TouchableOpacity
+                    onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+                    style={styles.eyeIcon}
+                  >
+                    <Ionicons
+                      name={showConfirmPassword ? "eye-off" : "eye"}
+                      size={20}
+                      color="#666"
+                    />
+                  </TouchableOpacity>
+                )}
+              </View>
+              {confirmPasswordError ? (
+                <Text style={styles.errorText}>{confirmPasswordError}</Text>
+              ) : null}
+            </View>
           </View>
-          {confirmPasswordError ? (
-            <Text style={styles.errorText}>{confirmPasswordError}</Text>
-          ) : null}
-        </View>
-      </View>
 
-      <View style={styles.bottomSection}>
-        <View style={styles.termsContainer}>
-          <Text style={styles.termsText}>
-            By clicking continue, you agree to our{" "}
-          </Text>
-          <TouchableOpacity onPress={handleTermsPress}>
-            <Text style={styles.linkText}>Terms of Service</Text>
-          </TouchableOpacity>
-          <Text style={styles.termsText}> and </Text>
-          <TouchableOpacity onPress={handlePrivacyPress}>
-            <Text style={styles.linkText}>Privacy Policy</Text>
-          </TouchableOpacity>
-        </View>
+          <View style={styles.bottomSection}>
+            <View style={styles.termsContainer}>
+              <Text style={styles.termsText}>
+                By clicking continue, you agree to our{" "}
+              </Text>
+              <TouchableOpacity onPress={handleTermsPress}>
+                <Text style={styles.linkText}>Terms of Service</Text>
+              </TouchableOpacity>
+              <Text style={styles.termsText}> and </Text>
+              <TouchableOpacity onPress={handlePrivacyPress}>
+                <Text style={styles.linkText}>Privacy Policy</Text>
+              </TouchableOpacity>
+            </View>
 
-        <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-          <Text style={styles.submitButtonText}>Submit</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-    </ScrollView>
+            <TouchableOpacity
+              style={styles.submitButton}
+              onPress={handleSubmit}
+            >
+              <Text style={styles.submitButtonText}>Submit</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 };

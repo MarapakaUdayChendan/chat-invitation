@@ -26,7 +26,7 @@ type MobileOtpNavigationProp = NativeStackNavigationProp<
   "MobileOtp"
 >;
 
-const logo = require("../../../assets/logo/logo.jpg");
+const logo = require("../../../assets/logo/logo1.png");
 
 const MobileOtp: React.FC<MobileOtpScreenProps> = ({ route }) => {
   const navigation = useNavigation<MobileOtpNavigationProp>();
@@ -124,7 +124,6 @@ const MobileOtp: React.FC<MobileOtpScreenProps> = ({ route }) => {
       <StatusBar barStyle="dark-content" backgroundColor="#fff" />
 
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        {/* Logo at the top */}
         <View style={styles.logoContainer}>
           <Image source={logo} style={styles.logoImage} resizeMode="contain" />
         </View>
@@ -221,12 +220,12 @@ const styles = StyleSheet.create({
   },
   logoContainer: {
     alignItems: "center",
+    justifyContent: "center",
     marginTop: 40,
-    marginBottom: 20,
   },
   logoImage: {
-    width: 120,
-    height: 120,
+    width: 180,
+    height: 180,
   },
   content: {
     flex: 1,

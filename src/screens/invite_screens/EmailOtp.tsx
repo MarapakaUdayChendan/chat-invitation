@@ -21,7 +21,7 @@ import { OtpGenerationSix } from "../../components/OtpGenerationSix";
 type EmailOtpScreenProps = NativeStackScreenProps<RootStack, "EmailOtp">;
 type EmailOtpNavigationProp = NativeStackNavigationProp<RootStack, "EmailOtp">;
 
-const logo = require("../../../assets/logo/logo.jpg");
+const logo = require("../../../assets/logo/logo1.png");
 
 const EmailOtp: React.FC<EmailOtpScreenProps> = ({ route }) => {
   const navigation = useNavigation<EmailOtpNavigationProp>();
@@ -37,7 +37,7 @@ const EmailOtp: React.FC<EmailOtpScreenProps> = ({ route }) => {
     setGeneratedOtp(generated);
     console.log("Generated OTP:", generated);
   }, []);
-  
+
   useEffect(() => {
     if (timer > 0) {
       const interval = setInterval(() => {
@@ -77,7 +77,7 @@ const EmailOtp: React.FC<EmailOtpScreenProps> = ({ route }) => {
     if (otpValue === generatedOtp) {
       setStatusMessage("OTP Matched");
       console.log("OTP Matched");
-      navigation.navigate("PasswordScreen",{email});
+      navigation.navigate("PasswordScreen", { email });
     } else {
       setStatusMessage("Invalid OTP");
       console.log("Invalid OTP");
@@ -130,7 +130,9 @@ const EmailOtp: React.FC<EmailOtpScreenProps> = ({ route }) => {
           {otp.map((digit, index) => (
             <TextInput
               key={index}
-              ref={(ref) => { inputRefs.current[index] = ref as TextInput; }}
+              ref={(ref) => {
+                inputRefs.current[index] = ref as TextInput;
+              }}
               style={styles.otpInput}
               value={digit}
               onChangeText={(value) => handleOtpChange(value, index)}
@@ -165,7 +167,9 @@ const EmailOtp: React.FC<EmailOtpScreenProps> = ({ route }) => {
       </View>
       <View style={styles.bottomSection}>
         <View style={styles.termsContainer}>
-          <Text style={styles.termsText}>By clicking continue, you agree to our </Text>
+          <Text style={styles.termsText}>
+            By clicking continue, you agree to our{" "}
+          </Text>
           <TouchableOpacity onPress={handleTermsPress}>
             <Text style={styles.linkText}>Terms of Service</Text>
           </TouchableOpacity>
@@ -185,13 +189,17 @@ const EmailOtp: React.FC<EmailOtpScreenProps> = ({ route }) => {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#fff", padding: 16 },
   logo: { width: 80, height: 80, resizeMode: "contain" },
-  content: { flex: 1, alignItems: "center", justifyContent: "center"},
+  content: { flex: 1, alignItems: "center", justifyContent: "center" },
   title: { fontSize: 22, fontWeight: "bold", marginBottom: 12 },
   emailContainer: { alignItems: "center", marginBottom: 16 },
   subtitle: { fontSize: 14, color: "#555" },
   emailRow: { flexDirection: "row", alignItems: "center", marginTop: 4 },
   emailText: { fontSize: 14, fontWeight: "600", marginRight: 6 },
-  otpContainer: { flexDirection: "row", justifyContent: "center", marginTop: 20 },
+  otpContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginTop: 20,
+  },
   otpInput: {
     borderWidth: 1,
     borderColor: "#ccc",
@@ -202,12 +210,21 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "600",
   },
-  resendContainer: { flexDirection: "row", alignItems: "center", marginTop: 16 },
+  resendContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 16,
+  },
   resendText: { fontSize: 14, color: "#555" },
   resendLink: { fontSize: 14, color: "#007AFF", fontWeight: "600" },
   disabledLink: { color: "#aaa" },
-  bottomSection: {alignItems: "center", marginTop: "auto"},
-  termsContainer: { flexDirection: "row", flexWrap: "wrap", justifyContent: "center", marginBottom: 12 },
+  bottomSection: { alignItems: "center", marginTop: "auto" },
+  termsContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    marginBottom: 12,
+  },
   termsText: { fontSize: 12, color: "#555" },
   linkText: { fontSize: 12, color: "#007AFF", fontWeight: "600" },
   submitButton: {
@@ -218,8 +235,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  submitButtonText: {    color: "#fff",
-    fontSize: 16,
-    fontWeight: "600",},
+  submitButtonText: { color: "#fff", fontSize: 16, fontWeight: "600" },
 });
 export default EmailOtp;

@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
 import { COLORS, FONT, INPUT } from "../styles/theme";
+import { useNavigation } from "expo-router";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStack } from "../navigation/RootStackNavigation";
 
 const InviteUsers: React.FC = () => {
   const [options, setOptions] = useState([
@@ -9,7 +12,7 @@ const InviteUsers: React.FC = () => {
     { id: 3, label: "What's app", checked: false },
     { id: 4, label: "Invite through chat (Platform Users)", checked: false },
   ]);
-
+  const navigation = useNavigation<NativeStackNavigationProp<RootStack>>();
   const toggleCheckbox = (id: number) => {
     setOptions((prev) =>
       prev.map((opt) => (opt.id === id ? { ...opt, checked: !opt.checked } : opt))
@@ -19,6 +22,7 @@ const InviteUsers: React.FC = () => {
   const handleSubmit = () => {
     const selected = options.filter((opt) => opt.checked).map((opt) => opt.label);
     console.log("Selected Options:", selected);
+    navigation.navigate('MobileScreen')
   };
 
   return (
@@ -59,7 +63,7 @@ const styles = StyleSheet.create({
   checkboxContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: COLORS.surface,
+    backgroundColor: '#add0f752',
     padding: 12,
     borderRadius: 8,
     marginBottom: 12,
