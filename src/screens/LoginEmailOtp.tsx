@@ -14,9 +14,9 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStack } from "./navigation/RootStackNavigation";
-import { OtpGeneration } from "./components/OtpGeneration";
-import { COLORS } from "./styles/theme";
+import { RootStack } from ".././navigation/RootStackNavigation";
+import { OtpGeneration } from ".././components/OtpGeneration";
+import { COLORS } from "../styles/theme";
 
 type LoginEmailOtpScreenProps = NativeStackScreenProps<
   RootStack,

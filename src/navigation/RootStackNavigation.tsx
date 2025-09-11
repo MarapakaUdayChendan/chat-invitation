@@ -6,8 +6,6 @@ import { StatusBar, StyleSheet } from "react-native";
 
 import LandingScreen from "../screens/LandingScreen";
 import LoginScreen from "../screens/LoginScreen";
-import SignUpScreen from "../screens/SignUpScreen";
-import SignUpConfirmation from "../screens/SignUpConfirmation";
 import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
 import ForgotPasswordConfirmation from "../screens/ForgotPasswordConfirmation";
 import ContactHome from "../screens/ContactHome";
@@ -19,7 +17,7 @@ import MobileOtp from "../screens/invite_screens/MobileOtp";
 import EmailScreen from "../screens/invite_screens/EmailScreen";
 import EmailOtp from "../screens/invite_screens/EmailOtp";
 import PasswordScreen from "../screens/invite_screens/PasswordScreen";
-import LoginEmailOtp from "../LoginEmailOtp";
+import LoginEmailOtp from "../../src/screens/LoginEmailOtp";
 
 export type SelectedContact = {
   id: string;
@@ -60,11 +58,6 @@ const RootStackNavigation: React.FC = () => {
             <Stack.Screen name="LandingScreen" component={LandingScreen} />
             <Stack.Screen name="LoginScreen" component={LoginScreen} />
             <Stack.Screen name="LoginEmailOtp" component={LoginEmailOtp} />
-            <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
-            <Stack.Screen
-              name="SignUpConfirmation"
-              component={SignUpConfirmation}
-            />
             <Stack.Screen
               name="ForgotPasswordScreen"
               component={ForgotPasswordScreen}

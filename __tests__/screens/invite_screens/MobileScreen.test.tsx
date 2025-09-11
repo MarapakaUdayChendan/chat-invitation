@@ -4,8 +4,9 @@ import MobileScreen from "../../../src/screens/invite_screens/MobileScreen";
 
 const mockNavigate = jest.fn();
 
-// Mock the useNavigation hook from expo-router
-jest.mock("expo-router", () => ({
+// Mock the useNavigation hook from @react-navigation/native (not expo-router)
+jest.mock("@react-navigation/native", () => ({
+  ...jest.requireActual("@react-navigation/native"),
   useNavigation: () => ({
     navigate: mockNavigate,
     goBack: jest.fn(),
