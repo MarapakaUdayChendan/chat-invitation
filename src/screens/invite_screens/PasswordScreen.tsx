@@ -132,10 +132,6 @@ const PasswordScreen: React.FC<PasswordScreenProps> = ({ route }) => {
           <StatusBar barStyle="dark-content" backgroundColor="#fff" />
 
           <View style={styles.header}>
-            <TouchableOpacity style={styles.backButton} onPress={handleGoBack}>
-              <Ionicons name="chevron-back" size={24} color="#000" />
-            </TouchableOpacity>
-
             <View style={styles.logoContainer}>
               <Image source={logo} style={styles.logo} />
             </View>
@@ -257,19 +253,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   header: {
-    flexDirection: "row",
+    flex:1,
+    justifyContent:"center",
     alignItems: "center",
-    paddingTop: 50,
-    paddingBottom: 30,
-  },
-  backButton: {
-    padding: 5,
-    marginRight: 10,
+    margin:"auto",
   },
   logoContainer: {
     flex: 1,
     alignItems: "center",
-    marginRight: 35,
+    justifyContent:"center",
   },
   logo: {
     borderRadius: 8,

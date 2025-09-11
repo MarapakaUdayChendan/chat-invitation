@@ -163,17 +163,14 @@ const styles = StyleSheet.create({
   logoContainer: {
     alignItems: "center",
     justifyContent: "center",
-    paddingTop: 40,
   },
   logoImage: {
     width: 180,
-    height: 180,
   },
   content: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: -40,
   },
   title: {
     fontSize: 24,

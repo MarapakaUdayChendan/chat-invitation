@@ -18,7 +18,8 @@ import {
   NativeStackScreenProps,
 } from "@react-navigation/native-stack";
 import { RootStack } from "../../navigation/RootStackNavigation";
-import { OtpGenerationSix } from "../../components/OtpGenerationSix";
+import { OtpGeneration } from "../../components/OtpGeneration";
+
 
 type MobileOtpScreenProps = NativeStackScreenProps<RootStack, "MobileOtp">;
 type MobileOtpNavigationProp = NativeStackNavigationProp<
@@ -26,22 +27,26 @@ type MobileOtpNavigationProp = NativeStackNavigationProp<
   "MobileOtp"
 >;
 
+
 const logo = require("../../../assets/logo/logo1.png");
+
 
 const MobileOtp: React.FC<MobileOtpScreenProps> = ({ route }) => {
   const navigation = useNavigation<MobileOtpNavigationProp>();
   const { mobileNumber } = route.params;
-  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
-  const [timer, setTimer] = useState(56);
+  const [otp, setOtp] = useState(["", "", "", ""]);
+  const [timer, setTimer] = useState(60);
   const [generatedOtp, setGeneratedOtp] = useState<string | null>(null);
   const [statusMessage, setStatusMessage] = useState<string>("");
   const inputRefs = useRef<TextInput[]>([]);
 
+
   useEffect(() => {
-    const generated = OtpGenerationSix();
+    const generated = OtpGeneration();
     setGeneratedOtp(generated);
     console.log("Generated OTP:", generated);
   }, []);
+
 
   useEffect(() => {
     if (timer > 0) {
@@ -52,16 +57,18 @@ const MobileOtp: React.FC<MobileOtpScreenProps> = ({ route }) => {
     }
   }, [timer]);
 
+
   const handleOtpChange = (value: string, index: number) => {
     if (value.length <= 1) {
       const newOtp = [...otp];
       newOtp[index] = value;
       setOtp(newOtp);
-      if (value && index < 5) {
+      if (value && index < 3) {
         inputRefs.current[index + 1]?.focus();
       }
     }
   };
+
 
   const handleKeyPress = (e: any, index: number) => {
     if (e.nativeEvent.key === "Backspace" && !otp[index] && index > 0) {
@@ -69,9 +76,10 @@ const MobileOtp: React.FC<MobileOtpScreenProps> = ({ route }) => {
     }
   };
 
+
   const handleSubmit = () => {
     const otpValue = otp.join("");
-    if (otpValue.length !== 6) {
+    if (otpValue.length !== 4) {
       setStatusMessage("Please enter complete OTP");
       return;
     }
@@ -91,22 +99,25 @@ const MobileOtp: React.FC<MobileOtpScreenProps> = ({ route }) => {
 
   const handleResendOtp = () => {
     if (timer === 0) {
-      const newOtp = OtpGenerationSix();
+      const newOtp = OtpGeneration();
       console.log("Resent OTP:", newOtp);
       setGeneratedOtp(newOtp);
-      setTimer(56);
-      setOtp(["", "", "", "", "", ""]);
+      setTimer(60);
+      setOtp(["", "", "", ""]);
       setStatusMessage("");
       inputRefs.current[0]?.focus();
     }
   };
 
+
   const handleEditMobile = () => {
     navigation.goBack();
   };
 
+
   const handleTermsPress = () => console.log("Terms of Service pressed");
   const handlePrivacyPress = () => console.log("Privacy Policy pressed");
+
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -116,6 +127,7 @@ const MobileOtp: React.FC<MobileOtpScreenProps> = ({ route }) => {
       .padStart(2, "0")}`;
   };
 
+
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -123,16 +135,18 @@ const MobileOtp: React.FC<MobileOtpScreenProps> = ({ route }) => {
     >
       <StatusBar barStyle="dark-content" backgroundColor="#fff" />
 
+
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.logoContainer}>
           <Image source={logo} style={styles.logoImage} resizeMode="contain" />
         </View>
 
+
         <View style={styles.content}>
           <Text style={styles.title}>Verify Mobile Number</Text>
           <View style={styles.mobileContainer}>
             <Text style={styles.subtitle}>
-              We have sent a 6 digit verification code to{" "}
+              We have sent a 4 digit verification code to{" "}
             </Text>
             <View style={styles.mobileRow}>
               <Text style={styles.mobileText}>{mobileNumber}</Text>
@@ -141,6 +155,7 @@ const MobileOtp: React.FC<MobileOtpScreenProps> = ({ route }) => {
               </TouchableOpacity>
             </View>
           </View>
+
 
           <View style={styles.otpContainer}>
             {otp.map((digit, index) => (
@@ -160,6 +175,7 @@ const MobileOtp: React.FC<MobileOtpScreenProps> = ({ route }) => {
             ))}
           </View>
 
+
           {statusMessage ? (
             <Text
               style={[
@@ -170,6 +186,7 @@ const MobileOtp: React.FC<MobileOtpScreenProps> = ({ route }) => {
               {statusMessage}
             </Text>
           ) : null}
+
 
           <View style={styles.resendContainer}>
             <Text style={styles.resendText}>Didn't receive code? </Text>
@@ -183,6 +200,7 @@ const MobileOtp: React.FC<MobileOtpScreenProps> = ({ route }) => {
             <Text style={styles.resendText}> - {formatTime(timer)}</Text>
           </View>
         </View>
+
 
         <View style={styles.bottomSection}>
           <View style={styles.termsContainer}>
@@ -199,6 +217,7 @@ const MobileOtp: React.FC<MobileOtpScreenProps> = ({ route }) => {
             <Text style={styles.termsText}>.</Text>
           </View>
 
+
           <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
             <Text style={styles.submitButtonText}>Submit</Text>
           </TouchableOpacity>
@@ -207,6 +226,7 @@ const MobileOtp: React.FC<MobileOtpScreenProps> = ({ route }) => {
     </KeyboardAvoidingView>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
@@ -221,11 +241,9 @@ const styles = StyleSheet.create({
   logoContainer: {
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 40,
   },
   logoImage: {
     width: 180,
-    height: 180,
   },
   content: {
     flex: 1,
@@ -344,5 +362,6 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
 });
+
 
 export default MobileOtp;

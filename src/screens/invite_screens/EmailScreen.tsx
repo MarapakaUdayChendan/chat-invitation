@@ -114,7 +114,8 @@ const styles = StyleSheet.create({
   logoContainer: {
     flex: 1,
     alignItems: "center",
-    marginRight: 35,
+    justifyContent:"center",
+    margin: "auto",
   },
   logo: {
     borderRadius: 8,
