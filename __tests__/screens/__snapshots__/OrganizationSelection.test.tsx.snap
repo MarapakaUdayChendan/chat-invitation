@@ -1,0 +1,323 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`OrganizationSelection renders and matches snapshot 1`] = `
+<View
+  style={
+    {
+      "backgroundColor": "#FFFFFF",
+      "flex": 1,
+    }
+  }
+>
+  <RCTScrollView
+    contentContainerStyle={
+      {
+        "padding": 16,
+        "paddingBottom": 100,
+      }
+    }
+  >
+    <View>
+      <Text
+        style={
+          {
+            "color": "#000000",
+            "fontSize": 18,
+            "fontWeight": "700",
+            "marginBottom": 8,
+            "marginTop": 16,
+          }
+        }
+      >
+        Organization Selection
+      </Text>
+      <Text
+        style={
+          {
+            "color": "#555555",
+            "fontSize": 14,
+            "marginBottom": 4,
+            "marginTop": 8,
+          }
+        }
+      >
+        My Org
+      </Text>
+      <View
+        style={
+          {
+            "backgroundColor": "#FFFFFF",
+            "borderColor": "#007AFF",
+            "borderRadius": 8,
+            "borderWidth": 1,
+            "color": "#000000",
+            "justifyContent": "center",
+            "marginBottom": 12,
+            "padding": 0,
+            "placeholderTextColor": "#888888",
+          }
+        }
+        testID="myorg-picker"
+      >
+        <View
+          style={
+            {
+              "color": "#000000",
+              "fontSize": 16,
+            }
+          }
+        >
+          <RNCPicker
+            items={
+              [
+                {
+                  "label": "My Organization",
+                  "testID": undefined,
+                  "textColor": undefined,
+                  "value": "My Organization",
+                },
+                {
+                  "label": "Org A",
+                  "testID": undefined,
+                  "textColor": undefined,
+                  "value": "Org A",
+                },
+                {
+                  "label": "Org B",
+                  "testID": undefined,
+                  "textColor": undefined,
+                  "value": "Org B",
+                },
+              ]
+            }
+            numberOfLines={1}
+            onChange={[Function]}
+            selectedIndex={0}
+            style={
+              [
+                {
+                  "height": 216,
+                },
+                undefined,
+              ]
+            }
+          />
+        </View>
+      </View>
+      <Text
+        style={
+          {
+            "color": "#555555",
+            "fontSize": 14,
+            "marginBottom": 4,
+            "marginTop": 8,
+          }
+        }
+      >
+        External Org
+      </Text>
+      <View
+        style={
+          {
+            "backgroundColor": "#FFFFFF",
+            "borderColor": "#007AFF",
+            "borderRadius": 8,
+            "borderWidth": 1,
+            "color": "#000000",
+            "justifyContent": "center",
+            "marginBottom": 12,
+            "padding": 0,
+            "placeholderTextColor": "#888888",
+          }
+        }
+        testID="externalorg-picker"
+      >
+        <View
+          style={
+            {
+              "color": "#000000",
+              "fontSize": 16,
+            }
+          }
+        >
+          <RNCPicker
+            items={
+              [
+                {
+                  "label": "My Organization",
+                  "testID": undefined,
+                  "textColor": undefined,
+                  "value": "My Organization",
+                },
+                {
+                  "label": "External Org A",
+                  "testID": undefined,
+                  "textColor": undefined,
+                  "value": "External Org A",
+                },
+                {
+                  "label": "External Org B",
+                  "testID": undefined,
+                  "textColor": undefined,
+                  "value": "External Org B",
+                },
+              ]
+            }
+            numberOfLines={1}
+            onChange={[Function]}
+            selectedIndex={0}
+            style={
+              [
+                {
+                  "height": 216,
+                },
+                undefined,
+              ]
+            }
+          />
+        </View>
+      </View>
+      <Text
+        style={
+          {
+            "color": "#000000",
+            "fontSize": 18,
+            "fontWeight": "700",
+            "marginBottom": 8,
+            "marginTop": 16,
+          }
+        }
+      >
+        Entry Point Selection
+      </Text>
+      <Text
+        style={
+          {
+            "color": "#555555",
+            "fontSize": 14,
+            "marginBottom": 4,
+            "marginTop": 8,
+          }
+        }
+      >
+        Entry Point
+      </Text>
+      <View
+        style={
+          {
+            "backgroundColor": "#FFFFFF",
+            "borderColor": "#007AFF",
+            "borderRadius": 8,
+            "borderWidth": 1,
+            "color": "#000000",
+            "justifyContent": "center",
+            "marginBottom": 12,
+            "padding": 0,
+            "placeholderTextColor": "#888888",
+          }
+        }
+        testID="entrypoint-picker"
+      >
+        <View
+          style={
+            {
+              "color": "#000000",
+              "fontSize": 16,
+            }
+          }
+        >
+          <RNCPicker
+            items={
+              [
+                {
+                  "label": "Customer",
+                  "testID": undefined,
+                  "textColor": undefined,
+                  "value": "Customer",
+                },
+                {
+                  "label": "Admin",
+                  "testID": undefined,
+                  "textColor": undefined,
+                  "value": "Admin",
+                },
+                {
+                  "label": "Partner",
+                  "testID": undefined,
+                  "textColor": undefined,
+                  "value": "Partner",
+                },
+              ]
+            }
+            numberOfLines={1}
+            onChange={[Function]}
+            selectedIndex={0}
+            style={
+              [
+                {
+                  "height": 216,
+                },
+                undefined,
+              ]
+            }
+          />
+        </View>
+      </View>
+    </View>
+  </RCTScrollView>
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "alignSelf": "center",
+        "backgroundColor": "#007AFF",
+        "borderRadius": 8,
+        "bottom": 16,
+        "opacity": 1,
+        "paddingVertical": 14,
+        "position": "absolute",
+        "width": "90%",
+      }
+    }
+  >
+    <Text
+      style={
+        {
+          "color": "#FFFFFF",
+          "fontSize": 18,
+          "fontWeight": "500",
+        }
+      }
+    >
+      Submit
+    </Text>
+  </View>
+</View>
+`;

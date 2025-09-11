@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { COLORS, FONT, INPUT } from "../styles/theme"; 
-import { useNavigation } from "expo-router";
+import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStack } from "../navigation/RootStackNavigation";
 
@@ -22,7 +22,7 @@ const OrganizationSelection: React.FC = () => {
         <Text style={styles.heading}>Organization Selection</Text>
 
         <Text style={styles.label}>My Org</Text>
-        <View style={styles.pickerWrapper}>
+        <View style={styles.pickerWrapper} testID="myorg-picker">
           <Picker
             selectedValue={myOrg}
             dropdownIconColor={COLORS.primary}
@@ -36,7 +36,7 @@ const OrganizationSelection: React.FC = () => {
         </View>
 
         <Text style={styles.label}>External Org</Text>
-        <View style={styles.pickerWrapper}>
+        <View style={styles.pickerWrapper} testID="externalorg-picker">
           <Picker
             selectedValue={externalOrg}
             dropdownIconColor={COLORS.primary}
@@ -52,7 +52,7 @@ const OrganizationSelection: React.FC = () => {
         <Text style={styles.heading}>Entry Point Selection</Text>
 
         <Text style={styles.label}>Entry Point</Text>
-        <View style={styles.pickerWrapper}>
+        <View style={styles.pickerWrapper} testID="entrypoint-picker">
           <Picker
             selectedValue={entryPoint}
             dropdownIconColor={COLORS.primary}
