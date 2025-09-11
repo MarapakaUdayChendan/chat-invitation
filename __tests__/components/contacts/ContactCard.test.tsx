@@ -22,7 +22,7 @@ describe("ContactCard Component", () => {
 
   it("renders avatar placeholder when imageUri is not provided", () => {
     const { getByText } = render(<ContactCard {...defaultProps} />);
-    expect(getByText("J")).toBeTruthy(); // First letter of name
+    expect(getByText("J")).toBeTruthy();
   });
 
   it("calls onPress and onLongPress correctly", () => {

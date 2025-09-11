@@ -6,8 +6,6 @@ import {
   TouchableOpacity,
   Text,
   StyleSheet,
-  Keyboard,
-  Alert,
 } from "react-native";
 import { COLORS, FONT, INPUT } from "../styles/theme";
 
@@ -152,12 +150,13 @@ const Email: React.FC = () => {
       )}
 
       <View style={styles.forgotContainer}>
-        <TouchableOpacity onPress={handleForgot}>
+        <TouchableOpacity onPress={handleForgot} testID="forgotButton">
           <Text style={styles.forgotText}>Forgot your password?</Text>
         </TouchableOpacity>
       </View>
 
       <TouchableOpacity
+        testID="signInButton"
         style={[styles.loginButton, !isFormValid && styles.buttonDisabled]}
         onPress={handleLogin}
         disabled={!isFormValid}
@@ -166,6 +165,7 @@ const Email: React.FC = () => {
       </TouchableOpacity>
 
       <TouchableOpacity
+        testID="otpButton"
         style={[styles.otpButton, !isEmailValid && styles.buttonDisabled]}
         onPress={handleLoginWithOTP}
         disabled={!isEmailValid}
