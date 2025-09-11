@@ -161,6 +161,7 @@ const PasswordScreen: React.FC<PasswordScreenProps> = ({ route }) => {
               <View style={styles.passwordInputContainer}>
                 <TextInput
                   style={styles.passwordInput}
+                  testID="passwordEnter"
                   placeholder="Type password"
                   placeholderTextColor="#999"
                   value={password}

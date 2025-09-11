@@ -132,7 +132,7 @@ const EmailOtp: React.FC<EmailOtpScreenProps> = ({ route }) => {
             </Text>
             <View style={styles.emailRow}>
               <Text style={styles.emailText}>{email}</Text>
-              <TouchableOpacity onPress={handleEditEmail}>
+              <TouchableOpacity testID="button" onPress={handleEditEmail}>
                 <Ionicons name="pencil" size={16} color="#007AFF" />
               </TouchableOpacity>
             </View>
@@ -141,6 +141,7 @@ const EmailOtp: React.FC<EmailOtpScreenProps> = ({ route }) => {
           <View style={styles.otpContainer}>
             {otp.map((digit, index) => (
               <TextInput
+                testID="otpInput"
                 key={index}
                 ref={(ref) => {
                   inputRefs.current[index] = ref as TextInput;
@@ -195,7 +196,7 @@ const EmailOtp: React.FC<EmailOtpScreenProps> = ({ route }) => {
             <Text style={styles.termsText}>.</Text>
           </View>
 
-          <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+          <TouchableOpacity testID="otpbutton" style={styles.submitButton} onPress={handleSubmit}>
             <Text style={styles.submitButtonText}>Submit</Text>
           </TouchableOpacity>
         </View>
