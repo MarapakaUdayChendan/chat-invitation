@@ -24,28 +24,36 @@
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
+                <span class='fraction'>0/7</span>
                 <span class='fraction'>0/7</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
+                <span class='fraction'>0/4</span>
                 <span class='fraction'>0/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
+                <span class='fraction'>0/5</span>
                 <span class='fraction'>0/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
+                <span class='fraction'>0/7</span>
                 <span class='fraction'>0/7</span>
             </div>
         
@@ -61,6 +69,7 @@
             </div>
         </template>
     </div>
+    <div class='status-line low'></div>
     <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
@@ -148,17 +157,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -170,6 +168,21 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -180,6 +193,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -211,6 +227,7 @@ interface Props {
 }
 &nbsp;
 const ContactList: React.FC&lt;Props&gt; = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >({</span></span>
+const ContactList: React.FC&lt;Props&gt; = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >({</span></span>
   contacts,
   selectedContacts,
   isSelectionMode,
@@ -218,17 +235,25 @@ const ContactList: React.FC&lt;Props&gt; = <span class="cstat-no" title="stateme
   onContactLongPress,
 }) =&gt; {
 <span class="cstat-no" title="statement not covered" >  return (</span>
+<span class="cstat-no" title="statement not covered" >  return (</span>
     &lt;FlatList
       data={contacts}
       keyExtractor={<span class="fstat-no" title="function not covered" >(i</span>tem) =&gt; <span class="cstat-no" title="statement not covered" >item.id}</span>
       renderItem={<span class="fstat-no" title="function not covered" >({</span> item }) =&gt; (
 <span class="cstat-no" title="statement not covered" >        &lt;ContactCard</span>
+      keyExtractor={<span class="fstat-no" title="function not covered" >(i</span>tem) =&gt; <span class="cstat-no" title="statement not covered" >item.id}</span>
+      renderItem={<span class="fstat-no" title="function not covered" >({</span> item }) =&gt; (
+<span class="cstat-no" title="statement not covered" >        &lt;ContactCard</span>
           id={item.id}
+          name={item.name || "Unknown"}
           name={item.name || "Unknown"}
           phone={item.phoneNumbers?.[0]?.number}
           imageUri={item.imageAvailable ? item.image?.uri : undefined}
+          imageUri={item.imageAvailable ? item.image?.uri : undefined}
           isSelected={selectedContacts.has(item.id)}
           isSelectionMode={isSelectionMode}
+          onPress={<span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >onContactPress(item)}</span>
+          onLongPress={<span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >onContactLongPress(item)}</span>
           onPress={<span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >onContactPress(item)}</span>
           onLongPress={<span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >onContactLongPress(item)}</span>
         /&gt;
@@ -243,6 +268,7 @@ const ContactList: React.FC&lt;Props&gt; = <span class="cstat-no" title="stateme
 &nbsp;
 export default ContactList;
 &nbsp;
+const styles = <span class="cstat-no" title="statement not covered" >StyleSheet.create({</span>
 const styles = <span class="cstat-no" title="statement not covered" >StyleSheet.create({</span>
   emptyText: {
     textAlign: "center",
