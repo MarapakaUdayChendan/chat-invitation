@@ -5,7 +5,6 @@ import ForgotPasswordConfirmation from "../../src/screens/ForgotPasswordConfirma
 
 const mockNavigate = jest.fn();
 
-// Mock the useNavigation hook from expo-router
 jest.mock("expo-router", () => ({
   useNavigation: () => ({
     navigate: mockNavigate,
@@ -19,12 +18,10 @@ jest.mock("expo-router", () => ({
   }),
 }));
 
-// Mock OTP generation to return a fixed value
 jest.mock("../../src/components/OtpGeneration", () => ({
   OtpGeneration: jest.fn(() => "123456"),
 }));
 
-// Mock theme styles
 jest.mock("../../src/styles/theme", () => ({
   COLORS: {
     background: "#ffffff",
@@ -36,16 +33,8 @@ jest.mock("../../src/styles/theme", () => ({
     secondaryText: "#666666",
   },
   FONT: {
-    size: {
-      heading: 24,
-      subheading: 16,
-      label: 12,
-      button: 16,
-    },
-    weight: {
-      bold: "700",
-      medium: "500",
-    },
+    size: { heading: 24, subheading: 16, label: 12, button: 16 },
+    weight: { bold: "700", medium: "500" },
     family: "System",
   },
   INPUT: {
@@ -58,10 +47,8 @@ jest.mock("../../src/styles/theme", () => ({
   },
 }));
 
-// Mock Alert
 jest.spyOn(Alert, "alert").mockImplementation(() => {});
 
-// Mock console.log for OTP sending
 const consoleSpy = jest.spyOn(console, "log").mockImplementation(() => {});
 
 describe("ForgotPasswordConfirmation Component", () => {
@@ -80,10 +67,7 @@ describe("ForgotPasswordConfirmation Component", () => {
   });
 
   it("renders all UI elements correctly", () => {
-    const { getByText, getByPlaceholderText } = render(
-      <ForgotPasswordConfirmation />
-    );
-
+    const { getByText, getByPlaceholderText } = render(<ForgotPasswordConfirmation />);
     expect(getByText("Forgot Password")).toBeTruthy();
     expect(getByText("Recover your account")).toBeTruthy();
     expect(getByPlaceholderText("Email Address")).toBeTruthy();
@@ -91,47 +75,31 @@ describe("ForgotPasswordConfirmation Component", () => {
   });
 
   it("shows error for invalid email format", () => {
-    const { getByPlaceholderText, getByText } = render(
-      <ForgotPasswordConfirmation />
-    );
-
+    const { getByPlaceholderText, getByText } = render(<ForgotPasswordConfirmation />);
     const emailInput = getByPlaceholderText("Email Address");
     const sendButton = getByText("Send OTP");
-
     fireEvent.changeText(emailInput, "invalidemail");
     fireEvent.press(sendButton);
-
     expect(getByText("Enter a valid email address")).toBeTruthy();
   });
 
   it("clears email error when user starts typing", () => {
-    const { getByPlaceholderText, getByText, queryByText } = render(
-      <ForgotPasswordConfirmation />
-    );
-
+    const { getByPlaceholderText, getByText, queryByText } = render(<ForgotPasswordConfirmation />);
     const emailInput = getByPlaceholderText("Email Address");
     const sendButton = getByText("Send OTP");
-
     fireEvent.changeText(emailInput, "invalid");
     fireEvent.press(sendButton);
     expect(getByText("Enter a valid email address")).toBeTruthy();
-
-    // Start typing - error should clear
     fireEvent.changeText(emailInput, "test@");
     expect(queryByText("Enter a valid email address")).toBeNull();
   });
 
   it("sends OTP successfully with valid email", () => {
-    const { getByPlaceholderText, getByText } = render(
-      <ForgotPasswordConfirmation />
-    );
-
+    const { getByPlaceholderText, getByText } = render(<ForgotPasswordConfirmation />);
     const emailInput = getByPlaceholderText("Email Address");
     const sendButton = getByText("Send OTP");
-
     fireEvent.changeText(emailInput, "test@example.com");
     fireEvent.press(sendButton);
-
     expect(getByText("OTP expires in 30s")).toBeTruthy();
     expect(getByPlaceholderText("Enter OTP")).toBeTruthy();
     expect(getByText("Verify OTP")).toBeTruthy();
@@ -139,52 +107,27 @@ describe("ForgotPasswordConfirmation Component", () => {
   });
 
   it("counts down timer correctly", async () => {
-    const { getByPlaceholderText, getByText } = render(
-      <ForgotPasswordConfirmation />
-    );
-
+    const { getByPlaceholderText, getByText } = render(<ForgotPasswordConfirmation />);
     const emailInput = getByPlaceholderText("Email Address");
     const sendButton = getByText("Send OTP");
-
     fireEvent.changeText(emailInput, "test@example.com");
     fireEvent.press(sendButton);
-
     expect(getByText("OTP expires in 30s")).toBeTruthy();
-
-    // Advance timer by 1 second
-    act(() => {
-      jest.advanceTimersByTime(1000);
-    });
-
-    await waitFor(() => {
-      expect(getByText("OTP expires in 29s")).toBeTruthy();
-    });
-
-    // Advance timer by 29 more seconds
-    act(() => {
-      jest.advanceTimersByTime(29000);
-    });
-
-    await waitFor(() => {
-      expect(getByText("Resend OTP")).toBeTruthy();
-    });
+    act(() => { jest.advanceTimersByTime(1000); });
+    await waitFor(() => expect(getByText("OTP expires in 29s")).toBeTruthy());
+    act(() => { jest.advanceTimersByTime(29000); });
+    await waitFor(() => expect(getByText("Resend OTP")).toBeTruthy());
   });
 
   it("verifies OTP correctly when valid", async () => {
-    const { getByPlaceholderText, getByText } = render(
-      <ForgotPasswordConfirmation />
-    );
-
+    const { getByPlaceholderText, getByText } = render(<ForgotPasswordConfirmation />);
     const emailInput = getByPlaceholderText("Email Address");
     fireEvent.changeText(emailInput, "test@example.com");
     fireEvent.press(getByText("Send OTP"));
-
     const otpInput = getByPlaceholderText("Enter OTP");
     const verifyButton = getByText("Verify OTP");
-
     fireEvent.changeText(otpInput, "123456");
     fireEvent.press(verifyButton);
-
     await waitFor(() => {
       expect(Alert.alert).toHaveBeenCalledWith(
         " Success",
@@ -195,68 +138,38 @@ describe("ForgotPasswordConfirmation Component", () => {
   });
 
   it("shows error for invalid OTP", () => {
-    const { getByPlaceholderText, getByText } = render(
-      <ForgotPasswordConfirmation />
-    );
-
+    const { getByPlaceholderText, getByText } = render(<ForgotPasswordConfirmation />);
     const emailInput = getByPlaceholderText("Email Address");
     fireEvent.changeText(emailInput, "test@example.com");
     fireEvent.press(getByText("Send OTP"));
-
     const otpInput = getByPlaceholderText("Enter OTP");
     const verifyButton = getByText("Verify OTP");
-
     fireEvent.changeText(otpInput, "000000");
     fireEvent.press(verifyButton);
-
     expect(getByText("Invalid OTP. Please try again.")).toBeTruthy();
   });
 
   it("shows error for expired OTP", async () => {
-    const { getByPlaceholderText, getByText } = render(
-      <ForgotPasswordConfirmation />
-    );
-
+    const { getByPlaceholderText, getByText } = render(<ForgotPasswordConfirmation />);
     const emailInput = getByPlaceholderText("Email Address");
     fireEvent.changeText(emailInput, "test@example.com");
     fireEvent.press(getByText("Send OTP"));
-
-    // Fast forward timer to expire OTP
-    act(() => {
-      jest.advanceTimersByTime(30000);
-    });
-
+    act(() => { jest.advanceTimersByTime(30000); });
     const otpInput = getByPlaceholderText("Enter OTP");
     const verifyButton = getByText("Verify OTP");
-
     fireEvent.changeText(otpInput, "123456");
     fireEvent.press(verifyButton);
-
-    await waitFor(() => {
-      expect(getByText("OTP expired! Please resend a new one.")).toBeTruthy();
-    });
+    await waitFor(() => expect(getByText("OTP expired! Please resend a new one.")).toBeTruthy());
   });
 
   it("allows resend after timer expires", async () => {
-    const { getByPlaceholderText, getByText } = render(
-      <ForgotPasswordConfirmation />
-    );
-
+    const { getByPlaceholderText, getByText } = render(<ForgotPasswordConfirmation />);
     const emailInput = getByPlaceholderText("Email Address");
     fireEvent.changeText(emailInput, "test@example.com");
     fireEvent.press(getByText("Send OTP"));
-
-    // Fast forward timer to 0
-    act(() => {
-      jest.advanceTimersByTime(30000);
-    });
-
-    await waitFor(() => {
-      expect(getByText("Resend OTP")).toBeTruthy();
-    });
-
+    act(() => { jest.advanceTimersByTime(30000); });
+    await waitFor(() => expect(getByText("Resend OTP")).toBeTruthy());
     fireEvent.press(getByText("Resend OTP"));
-
     await waitFor(() => {
       expect(getByText("OTP expires in 30s")).toBeTruthy();
       expect(consoleSpy).toHaveBeenLastCalledWith("OTP Sent", "Your OTP is 123456");
@@ -264,192 +177,97 @@ describe("ForgotPasswordConfirmation Component", () => {
   });
 
   it("shows last attempt warning on third send", async () => {
-    const { getByPlaceholderText, getByText } = render(
-      <ForgotPasswordConfirmation />
-    );
-
+    const { getByPlaceholderText, getByText } = render(<ForgotPasswordConfirmation />);
     const emailInput = getByPlaceholderText("Email Address");
     fireEvent.changeText(emailInput, "test@example.com");
-
-    // First send
     fireEvent.press(getByText("Send OTP"));
-
-    // Fast forward and resend
-    act(() => {
-      jest.advanceTimersByTime(30000);
-    });
-
-    await waitFor(() => {
-      fireEvent.press(getByText("Resend OTP"));
-    });
-
-    // Fast forward and resend again (third attempt)
-    act(() => {
-      jest.advanceTimersByTime(30000);
-    });
-
-    await waitFor(() => {
-      expect(getByText("Resend OTP (last attempt)")).toBeTruthy();
-    });
+    act(() => { jest.advanceTimersByTime(30000); });
+    await waitFor(() => fireEvent.press(getByText("Resend OTP")));
+    act(() => { jest.advanceTimersByTime(30000); });
+    await waitFor(() => expect(getByText("Resend OTP (last attempt)")).toBeTruthy());
   });
 
-it("shows correct resend button text progression", async () => {
-  const { getByPlaceholderText, getByText } = render(
-    <ForgotPasswordConfirmation />
-  );
-
-  const emailInput = getByPlaceholderText("Email Address");
-  fireEvent.changeText(emailInput, "test@example.com");
-
-  // First send
-  fireEvent.press(getByText("Send OTP"));
-
-  // After timer expires, should show "Resend OTP"
-  act(() => {
-    jest.advanceTimersByTime(30000);
+  it("shows correct resend button text progression", async () => {
+    const { getByPlaceholderText, getByText } = render(<ForgotPasswordConfirmation />);
+    const emailInput = getByPlaceholderText("Email Address");
+    fireEvent.changeText(emailInput, "test@example.com");
+    fireEvent.press(getByText("Send OTP"));
+    act(() => { jest.advanceTimersByTime(30000); });
+    await waitFor(() => expect(getByText("Resend OTP")).toBeTruthy());
+    fireEvent.press(getByText("Resend OTP"));
+    act(() => { jest.advanceTimersByTime(30000); });
+    await waitFor(() => expect(getByText("Resend OTP (last attempt)")).toBeTruthy());
   });
 
-  await waitFor(() => {
-    expect(getByText("Resend OTP")).toBeTruthy();
+  it("handles maximum send count logic", () => {
+    const { getByPlaceholderText, getByText } = render(<ForgotPasswordConfirmation />);
+    expect(getByPlaceholderText("Email Address")).toBeTruthy();
+    expect(getByText("Send OTP")).toBeTruthy();
   });
-
-  fireEvent.press(getByText("Resend OTP"));
-
-  // After second timer expires, should show "Resend OTP (last attempt)"
-  act(() => {
-    jest.advanceTimersByTime(30000);
-  });
-
-  await waitFor(() => {
-    expect(getByText("Resend OTP (last attempt)")).toBeTruthy();
-  });
-});
-
-it("handles maximum send count logic", () => {
-  // Test that component can render and handle the send count logic
-  const { getByPlaceholderText, getByText } = render(
-    <ForgotPasswordConfirmation />
-  );
-
-  expect(getByPlaceholderText("Email Address")).toBeTruthy();
-  expect(getByText("Send OTP")).toBeTruthy();
-  
-  // Component renders without errors - blocking logic exists
-});
 
   it("disables email input when blocked", () => {
-    const { getByPlaceholderText, getByText } = render(
-      <ForgotPasswordConfirmation />
-    );
-
+    const { getByPlaceholderText } = render(<ForgotPasswordConfirmation />);
     const emailInput = getByPlaceholderText("Email Address");
     fireEvent.changeText(emailInput, "test@example.com");
-
-    // Simulate reaching the limit (this would require complex state manipulation)
-    // For now, test that the input can be disabled
     expect(emailInput.props.editable).not.toBe(false);
   });
 
   it("clears OTP error when user starts typing", () => {
-    const { getByPlaceholderText, getByText, queryByText } = render(
-      <ForgotPasswordConfirmation />
-    );
-
+    const { getByPlaceholderText, getByText, queryByText } = render(<ForgotPasswordConfirmation />);
     const emailInput = getByPlaceholderText("Email Address");
     fireEvent.changeText(emailInput, "test@example.com");
     fireEvent.press(getByText("Send OTP"));
-
     const otpInput = getByPlaceholderText("Enter OTP");
     const verifyButton = getByText("Verify OTP");
-
-    // Trigger OTP error
     fireEvent.changeText(otpInput, "000000");
     fireEvent.press(verifyButton);
     expect(getByText("Invalid OTP. Please try again.")).toBeTruthy();
-
-    // Start typing - error should clear
     fireEvent.changeText(otpInput, "1");
     expect(queryByText("Invalid OTP. Please try again.")).toBeNull();
   });
 
   it("resets form state on successful OTP send", () => {
-    const { getByPlaceholderText, getByText, queryByText } = render(
-      <ForgotPasswordConfirmation />
-    );
-
+    const { getByPlaceholderText, getByText, queryByText } = render(<ForgotPasswordConfirmation />);
     const emailInput = getByPlaceholderText("Email Address");
     const sendButton = getByText("Send OTP");
-
-    // Trigger email error first
     fireEvent.changeText(emailInput, "invalid");
     fireEvent.press(sendButton);
     expect(getByText("Enter a valid email address")).toBeTruthy();
-
-    // Send valid OTP - should clear all errors
     fireEvent.changeText(emailInput, "test@example.com");
     fireEvent.press(sendButton);
-
     expect(queryByText("Enter a valid email address")).toBeNull();
   });
 
   it("has correct input properties", () => {
     const { getByPlaceholderText } = render(<ForgotPasswordConfirmation />);
-
     const emailInput = getByPlaceholderText("Email Address");
     expect(emailInput.props.keyboardType).toBe("email-address");
     expect(emailInput.props.autoCapitalize).toBe("none");
   });
 
   it("shows OTP input with correct properties after sending", () => {
-    const { getByPlaceholderText, getByText } = render(
-      <ForgotPasswordConfirmation />
-    );
-
+    const { getByPlaceholderText, getByText } = render(<ForgotPasswordConfirmation />);
     const emailInput = getByPlaceholderText("Email Address");
     fireEvent.changeText(emailInput, "test@example.com");
     fireEvent.press(getByText("Send OTP"));
-
     const otpInput = getByPlaceholderText("Enter OTP");
     expect(otpInput.props.keyboardType).toBe("number-pad");
   });
 
-  it("displays block timer message correctly", async () => {
-    // This test would require manipulating the component to be in blocked state
-    // For now, we verify the message format logic exists
+  it("displays block timer message correctly", () => {
     const { getByPlaceholderText } = render(<ForgotPasswordConfirmation />);
-    
-    // Component renders without error
     expect(getByPlaceholderText("Email Address")).toBeTruthy();
   });
 
   it("handles multiple timer interactions correctly", async () => {
-    const { getByPlaceholderText, getByText } = render(
-      <ForgotPasswordConfirmation />
-    );
-
+    const { getByPlaceholderText, getByText } = render(<ForgotPasswordConfirmation />);
     const emailInput = getByPlaceholderText("Email Address");
     fireEvent.changeText(emailInput, "test@example.com");
-
-    // Send OTP
     fireEvent.press(getByText("Send OTP"));
     expect(getByText("OTP expires in 30s")).toBeTruthy();
-
-    // Advance timer partially
-    act(() => {
-      jest.advanceTimersByTime(15000);
-    });
-
-    await waitFor(() => {
-      expect(getByText("OTP expires in 15s")).toBeTruthy();
-    });
-
-    // Complete timer
-    act(() => {
-      jest.advanceTimersByTime(15000);
-    });
-
-    await waitFor(() => {
-      expect(getByText("Resend OTP")).toBeTruthy();
-    });
+    act(() => { jest.advanceTimersByTime(15000); });
+    await waitFor(() => expect(getByText("OTP expires in 15s")).toBeTruthy());
+    act(() => { jest.advanceTimersByTime(15000); });
+    await waitFor(() => expect(getByText("Resend OTP")).toBeTruthy());
   });
 });
