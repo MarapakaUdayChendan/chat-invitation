@@ -9,13 +9,13 @@
     "web": "expo start --web",
     "test": "jest --watchAll"
   },
-"jest": {
-  "preset": "jest-expo",
-  "collectCoverage": true,
-  "collectCoverageFrom": [
-    "src/**/*.{ts,tsx,js,jsx}"
-  ]
-},
+  "jest": {
+    "preset": "jest-expo",
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "src/**/*.{ts,tsx,js,jsx}"
+    ]
+  },
   "dependencies": {
     "@react-native-async-storage/async-storage": "2.1.2",
     "@react-native-picker/picker": "2.11.1",
@@ -41,6 +41,7 @@
     "@babel/core": "^7.25.2",
     "@testing-library/react-native": "^13.3.3",
     "@types/react": "~19.0.10",
+    "react-test-renderer": "^19.0.0",
     "typescript": "~5.8.3"
   },
   "private": true

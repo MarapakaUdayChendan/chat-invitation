@@ -35,10 +35,9 @@ describe("InviteUsers", () => {
   it("navigates to MobileScreen on submit with selected options", () => {
     const { getByText } = render(<InviteUsers />);
 
-  fireEvent.press(getByText("E-Mail"));
-  fireEvent.press(getByText("What's app")); 
-  fireEvent.press(getByText("Submit"));
-
+    fireEvent.press(getByText("E-Mail"));
+    fireEvent.press(getByText("What's app"));
+    fireEvent.press(getByText("Submit"));
 
     expect(mockNavigate).toHaveBeenCalledWith("MobileScreen");
   });
