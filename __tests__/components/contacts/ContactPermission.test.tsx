@@ -2,29 +2,22 @@ import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import ContactPermission from '../../../src/components/contacts/ContactPermission';
 
-describe('ContactPermission Component', () => {
-  it('renders default error text when no error prop is provided', () => {
+describe('ContactPermission', () => {
+  it('renders default error text when no error', () => {
     const { getByText } = render(<ContactPermission error={null} onRetry={() => {}} />);
     expect(getByText(/permission required/i)).toBeTruthy();
   });
 
-  it('renders the provided error text', () => {
+  it('renders provided error text', () => {
     const errorMessage = 'Contacts permission denied';
-    const { getByText } = render(
-      <ContactPermission error={errorMessage} onRetry={() => {}} />
-    );
+    const { getByText } = render(<ContactPermission error={errorMessage} onRetry={() => {}} />);
     expect(getByText(errorMessage)).toBeTruthy();
   });
 
-  it('calls onRetry when the button is pressed', () => {
+  it('triggers onRetry on button press', () => {
     const onRetryMock = jest.fn();
-    const { getByText } = render(
-      <ContactPermission error={null} onRetry={onRetryMock} />
-    );
-
-    const button = getByText(/grant permission/i);
-    fireEvent.press(button);
-
+    const { getByText } = render(<ContactPermission error={null} onRetry={onRetryMock} />);
+    fireEvent.press(getByText(/grant permission/i));
     expect(onRetryMock).toHaveBeenCalled();
   });
 });
