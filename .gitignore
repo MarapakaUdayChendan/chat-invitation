@@ -35,3 +35,9 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+# Jest coverage output
+coverage/
+coverage-final.json
+lcov.info
+*.lcov
