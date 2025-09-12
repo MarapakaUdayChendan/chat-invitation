@@ -1,10 +1,10 @@
 import React from "react";
 import { render, fireEvent, waitFor } from "@testing-library/react-native";
-import Mobile from "../../../src/components/Mobile";
-import { OtpGeneration } from '../../../src/components/OtpGeneration';
+import Mobile from "../../src/components/Mobile";
+import { OtpGeneration } from '../../src/components/OtpGeneration';
 import { useNavigation } from 'expo-router';
 
-jest.mock('../../../src/components/OtpGeneration', () => ({
+jest.mock('../../src/components/OtpGeneration', () => ({
   OtpGeneration: jest.fn(),
 }));
 

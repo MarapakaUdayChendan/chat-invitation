@@ -1,6 +1,6 @@
 import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
-import ContactCard from "../../../src/components/contacts/ContactCard";
+import ContactCard from "../../src/components/contacts/ContactCard";
 
 describe("ContactCard Component", () => {
   const defaultProps = {

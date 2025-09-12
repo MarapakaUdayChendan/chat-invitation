@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
-import ContactSearch from '../../../src/components/contacts/ContactSearch';
+import ContactSearch from '../../src/components/contacts/ContactSearch';
 
 describe('ContactSearch', () => {
   it('renders with initial value', () => {

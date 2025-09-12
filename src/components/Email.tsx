@@ -22,11 +22,10 @@ const Email: React.FC = () => {
   });
   const [errors, setErrors] = useState({ email: "", password: "" });
   const [focusedField, setFocusedField] = useState<string | null>(null);
-  const [touched, setTouched] = useState<{ [K in keyof FormData]?: boolean }>(
-    {}
-  );
+  const [touched, setTouched] = useState<{ [K in keyof FormData]?: boolean }>({});
 
   const emailRegex = useMemo(() => /^[^\s@]+@[^\s@]+\.[^\s@]+$/, []);
+  
   const validateEmail = useCallback(
     (email: string) =>
       !email.trim()
@@ -36,6 +35,7 @@ const Email: React.FC = () => {
         : "",
     [emailRegex]
   );
+  
   const validatePassword = useCallback(
     (password: string) =>
       !password
@@ -56,6 +56,7 @@ const Email: React.FC = () => {
   };
 
   const handleFocus = (field: keyof FormData) => setFocusedField(field);
+  
   const handleBlur = (field: keyof FormData) => {
     setFocusedField(null);
     setTouched((prev) => ({ ...prev, [field]: true }));
@@ -116,6 +117,7 @@ const Email: React.FC = () => {
       </View>
 
       <TextInput
+        testID="email-input"
         placeholder="Email Address"
         placeholderTextColor={COLORS.placeholder}
         value={formData.email}
@@ -129,10 +131,11 @@ const Email: React.FC = () => {
         returnKeyType="next"
       />
       {errors.email && touched.email && (
-        <Text style={styles.errorText}>{errors.email}</Text>
+        <Text testID="email-error" style={styles.errorText}>{errors.email}</Text>
       )}
 
       <TextInput
+        testID="password-input"
         placeholder="Password"
         placeholderTextColor={COLORS.placeholder}
         value={formData.password}
@@ -146,7 +149,7 @@ const Email: React.FC = () => {
         onSubmitEditing={handleLogin}
       />
       {errors.password && touched.password && (
-        <Text style={styles.errorText}>{errors.password}</Text>
+        <Text testID="password-error" style={styles.errorText}>{errors.password}</Text>
       )}
 
       <View style={styles.forgotContainer}>

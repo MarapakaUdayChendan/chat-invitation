@@ -29,6 +29,7 @@ const ForgotPasswordConfirmation: React.FC = () => {
   const [blocked, setBlocked] = useState(false);
   const [blockTimer, setBlockTimer] = useState<number | null>(null);
   const navigation = useNavigation<NativeStackNavigationProp<RootStack>>();
+
   useEffect(() => {
     let timer: any;
     if (timeLeft > 0) {
@@ -107,6 +108,7 @@ const ForgotPasswordConfirmation: React.FC = () => {
         <Text style={styles.title}>Forgot Password</Text>
         <Text style={styles.subtitle}>Recover your account</Text>
         <TextInput
+          testID="email-input"
           style={styles.input}
           placeholder="Email Address"
           placeholderTextColor={COLORS.placeholder}
@@ -123,6 +125,7 @@ const ForgotPasswordConfirmation: React.FC = () => {
 
         {!blocked && timeLeft === 0 && sendCount < MAX_OTP_SENDS && (
           <TouchableOpacity
+            testID="send-otp-button"
             style={styles.button}
             activeOpacity={0.85}
             onPress={handleSendOtp}
@@ -134,6 +137,7 @@ const ForgotPasswordConfirmation: React.FC = () => {
         {generatedOtp && (
           <>
             <TextInput
+              testID="otp-input"
               style={styles.input}
               placeholder="Enter OTP"
               placeholderTextColor={COLORS.placeholder}
@@ -149,7 +153,9 @@ const ForgotPasswordConfirmation: React.FC = () => {
         )}
 
         {timeLeft > 0 && (
-          <Text style={styles.timerText}>OTP expires in {timeLeft}s</Text>
+          <Text testID="timer-text" style={styles.timerText}>
+            OTP expires in {timeLeft}s
+          </Text>
         )}
 
         {!blocked &&
@@ -157,6 +163,7 @@ const ForgotPasswordConfirmation: React.FC = () => {
           timeLeft === 0 &&
           sendCount < MAX_OTP_SENDS && (
             <TouchableOpacity
+              testID="resend-otp-button"
               style={[styles.button, { backgroundColor: COLORS.accent }]}
               activeOpacity={0.85}
               onPress={handleSendOtp}
@@ -171,6 +178,7 @@ const ForgotPasswordConfirmation: React.FC = () => {
 
         {generatedOtp && (
           <TouchableOpacity
+            testID="verify-otp-button"
             style={styles.button}
             activeOpacity={0.85}
             onPress={handleVerifyOtp}
@@ -180,7 +188,7 @@ const ForgotPasswordConfirmation: React.FC = () => {
         )}
 
         {blocked && (
-          <Text style={styles.errorText}>
+          <Text testID="block-message" style={styles.errorText}>
             {blockMessage ||
               "You have reached the OTP limit. Try after 12 hours."}
           </Text>
@@ -194,7 +202,6 @@ export default ForgotPasswordConfirmation;
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.background },
-
   title: {
     fontSize: FONT.size.heading,
     fontWeight: FONT.weight.bold,
@@ -211,12 +218,10 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontFamily: FONT.family,
   },
-
   input: {
     ...INPUT,
     marginBottom: 12,
   },
-
   errorText: {
     color: COLORS.error,
     fontSize: FONT.size.label,
@@ -224,7 +229,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontFamily: FONT.family,
   },
-
   button: {
     backgroundColor: COLORS.primary,
     borderRadius: 10,
@@ -238,7 +242,6 @@ const styles = StyleSheet.create({
     fontWeight: FONT.weight.bold,
     fontFamily: FONT.family,
   },
-
   timerText: {
     color: COLORS.secondaryText,
     marginBottom: 8,

@@ -133,7 +133,7 @@ const PasswordScreen: React.FC<PasswordScreenProps> = ({ route }) => {
 
           <View style={styles.header}>
             <View style={styles.logoContainer}>
-              <Image source={logo} style={styles.logo} />
+              <Image source={logo} style={styles.logo} testID="app-logo" />
             </View>
           </View>
 
@@ -147,12 +147,18 @@ const PasswordScreen: React.FC<PasswordScreenProps> = ({ route }) => {
               <Text style={styles.inputLabel}>Email</Text>
               <View style={styles.emailInputContainer}>
                 <TextInput
+                  testID="email-input"
                   style={styles.emailInput}
                   value={email}
                   editable={false}
                   placeholderTextColor="#999"
                 />
-                <Ionicons name="checkmark-circle" size={20} color="#4CAF50" />
+                <Ionicons 
+                  testID="email-checkmark"
+                  name="checkmark-circle" 
+                  size={20} 
+                  color="#4CAF50" 
+                />
               </View>
             </View>
 
@@ -172,6 +178,7 @@ const PasswordScreen: React.FC<PasswordScreenProps> = ({ route }) => {
                 />
                 {password.length > 0 && (
                   <TouchableOpacity
+                    testID="password-eye-toggle"
                     onPress={() => setShowPassword(!showPassword)}
                     style={styles.eyeIcon}
                   >
@@ -184,7 +191,9 @@ const PasswordScreen: React.FC<PasswordScreenProps> = ({ route }) => {
                 )}
               </View>
               {passwordError ? (
-                <Text style={styles.errorText}>{passwordError}</Text>
+                <Text testID="password-error" style={styles.errorText}>
+                  {passwordError}
+                </Text>
               ) : null}
             </View>
 
@@ -192,6 +201,7 @@ const PasswordScreen: React.FC<PasswordScreenProps> = ({ route }) => {
               <Text style={styles.inputLabel}>Confirm Password</Text>
               <View style={styles.passwordInputContainer}>
                 <TextInput
+                  testID="confirm-password-input"
                   style={styles.passwordInput}
                   placeholder="Type password"
                   placeholderTextColor="#999"
@@ -203,6 +213,7 @@ const PasswordScreen: React.FC<PasswordScreenProps> = ({ route }) => {
                 />
                 {confirmPassword.length > 0 && (
                   <TouchableOpacity
+                    testID="confirm-password-eye-toggle"
                     onPress={() => setShowConfirmPassword(!showConfirmPassword)}
                     style={styles.eyeIcon}
                   >
@@ -215,7 +226,9 @@ const PasswordScreen: React.FC<PasswordScreenProps> = ({ route }) => {
                 )}
               </View>
               {confirmPasswordError ? (
-                <Text style={styles.errorText}>{confirmPasswordError}</Text>
+                <Text testID="confirm-password-error" style={styles.errorText}>
+                  {confirmPasswordError}
+                </Text>
               ) : null}
             </View>
           </View>
@@ -225,16 +238,17 @@ const PasswordScreen: React.FC<PasswordScreenProps> = ({ route }) => {
               <Text style={styles.termsText}>
                 By clicking continue, you agree to our{" "}
               </Text>
-              <TouchableOpacity onPress={handleTermsPress}>
+              <TouchableOpacity testID="terms-link" onPress={handleTermsPress}>
                 <Text style={styles.linkText}>Terms of Service</Text>
               </TouchableOpacity>
               <Text style={styles.termsText}> and </Text>
-              <TouchableOpacity onPress={handlePrivacyPress}>
+              <TouchableOpacity testID="privacy-link" onPress={handlePrivacyPress}>
                 <Text style={styles.linkText}>Privacy Policy</Text>
               </TouchableOpacity>
             </View>
 
             <TouchableOpacity
+              testID="submit-button"
               style={styles.submitButton}
               onPress={handleSubmit}
             >

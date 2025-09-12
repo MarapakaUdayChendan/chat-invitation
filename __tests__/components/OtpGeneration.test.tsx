@@ -1,4 +1,4 @@
-import { OtpGeneration } from "../../../src/components/OtpGeneration";
+import { OtpGeneration } from "../../src/components/OtpGeneration";
 
 describe('OtpGeneration', () => {
   it('returns a 4-digit string', () => {

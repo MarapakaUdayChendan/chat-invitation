@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
-import ContactPermission from '../../../src/components/contacts/ContactPermission';
+import ContactPermission from '../../src/components/contacts/ContactPermission';
 
 describe('ContactPermission', () => {
   it('renders default error text when no error', () => {
