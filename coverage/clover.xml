@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1757593836571" clover="3.2.0">
-  <project timestamp="1757593836571" name="All files">
+<coverage generated="1757594377317" clover="3.2.0">
+  <project timestamp="1757594377317" name="All files">
     <metrics statements="746" coveredstatements="703" conditionals="453" coveredconditionals="385" methods="215" coveredmethods="200" elements="1414" coveredelements="1288" complexity="0" loc="746" ncloc="746" packages="7" files="24" classes="24"/>
     <package name="src">
       <metrics statements="0" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
@@ -359,33 +359,33 @@
       </file>
       <file name="InviteContacts.tsx" path="D:\chat-invitation\src\screens\InviteContacts.tsx">
         <metrics statements="28" coveredstatements="23" conditionals="9" coveredconditionals="7" methods="13" coveredmethods="11"/>
-        <line num="305" count="12" type="stmt"/>
-        <line num="306" count="12" type="stmt"/>
-        <line num="311" count="12" type="stmt"/>
-        <line num="313" count="12" type="stmt"/>
-        <line num="314" count="12" type="stmt"/>
-        <line num="315" count="12" type="stmt"/>
-        <line num="316" count="12" type="cond" truecount="1" falsecount="1"/>
-        <line num="317" count="12" type="stmt"/>
+        <line num="305" count="24" type="stmt"/>
+        <line num="306" count="24" type="stmt"/>
+        <line num="311" count="24" type="stmt"/>
+        <line num="313" count="24" type="stmt"/>
+        <line num="314" count="24" type="stmt"/>
+        <line num="315" count="24" type="stmt"/>
+        <line num="316" count="24" type="cond" truecount="1" falsecount="1"/>
+        <line num="317" count="24" type="stmt"/>
         <line num="319" count="0" type="stmt"/>
         <line num="322" count="0" type="stmt"/>
-        <line num="325" count="12" type="stmt"/>
-        <line num="329" count="12" type="stmt"/>
+        <line num="325" count="24" type="stmt"/>
+        <line num="329" count="24" type="stmt"/>
         <line num="330" count="1" type="stmt"/>
         <line num="335" count="0" type="stmt"/>
         <line num="338" count="0" type="stmt"/>
-        <line num="344" count="12" type="stmt"/>
+        <line num="344" count="24" type="stmt"/>
         <line num="345" count="1" type="stmt"/>
         <line num="353" count="1" type="stmt"/>
         <line num="354" count="2" type="stmt"/>
         <line num="358" count="1" type="stmt"/>
         <line num="361" count="1" type="stmt"/>
-        <line num="369" count="12" type="stmt"/>
-        <line num="370" count="20" type="stmt"/>
+        <line num="369" count="24" type="stmt"/>
+        <line num="370" count="44" type="stmt"/>
         <line num="386" count="1" type="stmt"/>
-        <line num="393" count="12" type="stmt"/>
+        <line num="393" count="24" type="stmt"/>
         <line num="398" count="0" type="stmt"/>
-        <line num="415" count="22" type="stmt"/>
+        <line num="415" count="46" type="stmt"/>
         <line num="440" count="1" type="stmt"/>
       </file>
       <file name="InviteUsers.tsx" path="D:\chat-invitation\src\screens\InviteUsers.tsx">
